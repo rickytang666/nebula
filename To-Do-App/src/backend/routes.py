@@ -1,6 +1,10 @@
 from flask import jsonify, request
 
 def init_routes(app):
+    @app.route('/')
+    def hello_world():
+        return "Hello World"
+
     @app.route('/tasks', methods=['POST'])
     def add():
         # TODO: Implement add task functionality
