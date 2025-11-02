@@ -3,3 +3,5 @@
 To-Do-App/src/backend/__pycache__/
 .env
 *.expo/
+*__pycache__/
+*.env
