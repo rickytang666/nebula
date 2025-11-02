@@ -8,16 +8,12 @@ router = APIRouter(prefix="/user", tags=["user"])
 # Models
 # ---------------------------
 
+'''
 class editUserInfoRequest(BaseModel):
     name: str | None = None
     phone: str | None = None
     profile_data: list | None = None
-
-class editUserEmailRequest(BaseModel):
-    email: str
-
-class editUserPasswordRequest(BaseModel):
-    new_password: str
+'''
 
 # ---------------------------
 # Routes
