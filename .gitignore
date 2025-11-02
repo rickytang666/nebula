@@ -2,3 +2,4 @@
 .DS_Store
 To-Do-App/src/backend/__pycache__/
 *__pycache__/
+*.env
