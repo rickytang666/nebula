@@ -44,13 +44,13 @@ The Notes App is a mobile application designed to provide users with a simple, s
 - **OCR Integration**: Optical Character Recognition system for digitizing handwritten or printed notes via camera/scanner
 - **AI-Powered Note Enhancement**: AI integration for note explanation, summarization, and content suggestions
 
-### Future Considerations 
+### Future Considerations If Time Permits
 #### Enhanced Authentication
 - Email verification process for account activation
 - Password reset via email with secure token generation
 - Account deletion option with data confirmation
 
-#### Advanced Features to Include If Time Permits
+#### Advanced Note Taking Features
 - Undo/redo functionality during editing sessions
 - Version history
 - Note organization with folders/tags
@@ -98,19 +98,30 @@ The Notes App is a mobile application designed to provide users with a simple, s
 7. User acceptance testing and deployment
 
 ## Stakeholder
-### Development Team
+
+### Primary Stakeholders
+#### Development Team
 - **Kenny**: Backend, Schema Design, Create Endpoints
 - **Ricky**: Frontend, React Native API Functions
 - **Jamie**: Frontend, React Native App Design
 - **Aadesh**: Backend, Create Endpoints
 - **Eugene**: Backend, User Login System Implementation
 
-### Future Scaling Roles
+#### Future Scaling Roles
 - **Kenny**: Project Manager - Timeline oversight and team coordination
 - **Ricky**: Backend Lead - Server-side logic and database design
 - **Jamie**: Frontend Lead - UI/UX and client-side functionality
 - **Aadesh**: QA & Testing - Test development and quality assurance
 - **Eugene**: Documentation & Support - Technical documentation and user support
+
+### Secondary Stakeholders
+#### Academic Oversight
+- **SE101 Teaching Team**: Course instructors and teaching assistants responsible for project evaluation, guidance, and academic assessment
+
+#### End Users
+- **Target Customers**: Android mobile device users seeking a reliable note-taking application
+- **Beta Testers**: Initial user group for testing and feedback during development phases
+- **Future User Base**: Potential users for scaled versions with advanced features
 
 ## Timeline
 
