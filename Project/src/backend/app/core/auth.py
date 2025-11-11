@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.database import get_supabase
+from supabase import Client
 
 security = HTTPBearer()
 
@@ -9,29 +10,59 @@ async def get_current_user(
 ) -> dict:
     """
     Verify JWT token and return current user.
-    Verifies Supabase JWT tokens.
+    Uses Supabase to verify JWT tokens and extract user information.
+    
+    Returns:
+        dict: User information including id, email, and other auth metadata
+        
+    Raises:
+        HTTPException: 401 if token is invalid, expired, or malformed
     """
     token = credentials.credentials
     
-    # TODO: Implement Supabase JWT verification
-    # Get supabase client and verify token
     try:
-        supabase = get_supabase()
-        # Set the session with the token
-        supabase.auth.set_session(token, refresh_token=None)
-        # Get user from token
-        user = supabase.auth.get_user(token)
-        if not user or not user.user:
+        # Create Supabase client and verify token
+        supabase: Client = get_supabase()
+        
+        # Verify token and get user info
+        # This validates the JWT signature, expiry, and returns user data
+        user_response = supabase.auth.get_user(token)
+        
+        if not user_response or not user_response.user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid authentication credentials",
+                detail="Invalid or expired token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        return user.user.model_dump() if hasattr(user.user, 'model_dump') else user.user.dict()
+        
+        # Extract user data
+        user = user_response.user
+        
+        # Return user data as dict
+        user_dict = {
+            "id": str(user.id),
+            "email": user.email,
+            "aud": user.aud if hasattr(user, 'aud') else None,
+            "role": user.role if hasattr(user, 'role') else None,
+            "created_at": str(user.created_at) if hasattr(user, 'created_at') else None,
+        }
+        
+        return user_dict
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
+    except AttributeError as e:
+        # Handle missing Supabase client or auth attribute
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication service not configured",
+        )
     except Exception as e:
+        # Handle any other errors (expired token, invalid signature, etc.)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
+            detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

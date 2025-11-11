@@ -22,12 +22,13 @@ class UserResponse(BaseModel):
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(
-    current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Get current authenticated user information.
+    Returns the authenticated user's id and email from the JWT token.
     """
-    # TODO: Implement
-    # Return user info from auth.users or profiles table if it exists
-    pass
+    return UserResponse(
+        id=current_user["id"],
+        email=current_user["email"]
+    )
