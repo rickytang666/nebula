@@ -1,5 +1,3 @@
-from typing import Optional, Tuple
-from datetime import date
 from dotenv import load_dotenv
 import pymysql
 import os
