@@ -16,12 +16,15 @@ CREATE TABLE public.notes (
 );
 
 CREATE FUNCTION public.set_current_timestamp_on_update()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 CREATE TRIGGER notes_set_updated_at
 BEFORE UPDATE ON public.notes
