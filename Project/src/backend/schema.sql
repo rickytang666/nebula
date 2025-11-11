@@ -3,18 +3,12 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 DROP TRIGGER IF EXISTS notes_set_updated_at ON public.notes;
 DROP FUNCTION IF EXISTS public.set_current_timestamp_on_update();
 DROP TABLE IF EXISTS public.notes;
-DROP TABLE IF EXISTS public.users;
 
-CREATE TABLE public.users (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT NOT NULL UNIQUE,
-  name TEXT NOT NULL,
-  data JSONB
-);
-
+-- notes table references auth.users directly
+-- if you need extra user data later, create a profiles table
 CREATE TABLE public.notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
