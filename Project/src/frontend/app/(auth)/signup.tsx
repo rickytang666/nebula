@@ -20,6 +20,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Alert, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '@/lib/supabase';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -33,22 +34,65 @@ export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async () => {
+    // Validation
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
     if (!agreeToTerms) {
       Alert.alert("Terms Required", "Please agree to the terms and conditions");
       return;
     }
+
     if (password !== confirmPassword) {
       Alert.alert("Password Mismatch", "Passwords do not match");
       return;
     }
+
+    if (password.length < 6) {
+      Alert.alert("Weak Password", "Password must be at least 6 characters");
+      return;
+    }
     
     setIsLoading(true);
-    // TODO: Implement actual signup logic
-    setTimeout(() => {
+    try {
+      // Step 1: Create auth account with Supabase
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: password,
+        options: {
+          data: {
+            full_name: name.trim(),
+          },
+        },
+      });
+
+      if (error) {
+        Alert.alert("Signup Failed", error.message);
+        return;
+      }
+
+      if (data.user) {
+        // Step 2: TODO - Call backend to create profile when ready
+        // For now, just show success and navigate to login
+        Alert.alert(
+          "Success!",
+          "Account created successfully. Please sign in.",
+          [
+            {
+              text: "OK",
+              onPress: () => router.replace("/(auth)/login"),
+            },
+          ]
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred");
+      console.error("Signup error:", error);
+    } finally {
       setIsLoading(false);
-      // Redirect to login page after successful signup
-      router.replace("/(auth)/login");
-    }, 1000);
+    }
   };
 
   return (
