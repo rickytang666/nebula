@@ -10,8 +10,8 @@ export default function RootLayout() {
     
     <GluestackUIProvider mode="dark">
       <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </SafeAreaProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+      </SafeAreaProvider>
     </GluestackUIProvider>
   
   );

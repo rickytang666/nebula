@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fix autofill background and text color for dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  caret-color: #FFFFFF !important;
+}
+
+/* Fix for React Native Web inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  color: #FFFFFF !important;
+  background-color: #000000 !important;
+}
+
+input[type="text"]:-webkit-autofill,
+input[type="email"]:-webkit-autofill,
+input[type="password"]:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
