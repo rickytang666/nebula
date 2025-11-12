@@ -14,8 +14,9 @@ import {
   Pressable,
 } from "@/components/ui";
 import { StatusBar } from 'expo-status-bar';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,13 +26,34 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
     setIsLoading(true);
-    // TODO: Implement actual login logic
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password,
+      });
+
+      if (error) {
+        Alert.alert("Login Failed", error.message);
+        return;
+      }
+
+      if (data.session) {
+        // Successfully logged in
+        router.dismissAll();
+        router.replace("/(main)/home");
+      }
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred");
+      console.error("Login error:", error);
+    } finally {
       setIsLoading(false);
-      router.dismissAll();
-      router.replace("/(main)/home");
-    }, 1000);
+    }
   };
 
   return (
