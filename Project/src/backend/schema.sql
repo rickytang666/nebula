@@ -30,3 +30,56 @@ CREATE TRIGGER notes_set_updated_at
 BEFORE UPDATE ON public.notes
 FOR EACH ROW
 EXECUTE FUNCTION public.set_current_timestamp_on_update();
+
+/*
+ * ---------------------------
+ * PROFILES TABLE
+ * ---------------------------
+ * Stores public-facing user data.
+ */
+
+-- 1. Create the profiles table
+CREATE TABLE public.profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 2. Add an update trigger for profiles' updated_at timestamp
+-- (This uses the same function defined for the notes table)
+CREATE TRIGGER profiles_set_updated_at
+BEFORE UPDATE ON public.profiles
+FOR EACH ROW
+EXECUTE FUNCTION public.set_current_timestamp_on_update();
+
+/*
+ * ---------------------------
+ * ROW LEVEL SECURITY (RLS)
+ * ---------------------------
+ */
+
+-- 3. Enable RLS for the new profiles table
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- 4. Add RLS policies for profiles
+CREATE POLICY "Users can view their own profile."
+  ON public.profiles FOR SELECT
+  USING (auth.uid() = id);
+
+CREATE POLICY "Users can create their own profile."
+  ON public.profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
+  
+CREATE POLICY "Users can update their own profile."
+  ON public.profiles FOR UPDATE
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+-- 5. Enable RLS for the existing notes table
+ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
+
+-- 6. Add RLS policy for notes
+CREATE POLICY "Users can view and manage their own notes."
+  ON public.notes FOR ALL
+  USING (auth.uid() = user_id);
