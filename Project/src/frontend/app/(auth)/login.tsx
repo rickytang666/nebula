@@ -53,7 +53,9 @@ export default function LoginPage() {
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);
-    }
+      router.dismissAll();
+      router.replace("/(main)/(tabs)/notes");
+    }, 1000);
   };
 
   return (

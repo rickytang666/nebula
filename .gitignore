@@ -5,3 +5,6 @@ To-Do-App/src/backend/__pycache__/
 *.expo/
 *__pycache__/
 *.env
+.kiro/
+Project/extrafiles/
+.vscode/

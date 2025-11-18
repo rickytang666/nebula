@@ -1,10 +1,13 @@
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function MainLayout() {
   return (
-    <Tabs>
-      <Tabs.Screen name="notes" options={{ title: "Notes" }} />
-      <Tabs.Screen name="profile" options={{ title: "Profile" }} />
-    </Tabs>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+        contentStyle: { backgroundColor: '#000000' },
+      }}
+    />
   );
 }
