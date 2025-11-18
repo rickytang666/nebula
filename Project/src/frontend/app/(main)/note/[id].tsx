@@ -15,9 +15,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
 import { Note } from '../../../types/note';
-import { SAMPLE_NOTES } from '../../../data/sampleNotes';
+import { getNoteById, saveNote as saveNoteToStorage, deleteNote as deleteNoteFromStorage } from '../../../utils/noteStorage';
 
 export default function NoteDetailScreen() {
   const router = useRouter();
@@ -32,75 +33,117 @@ export default function NoteDetailScreen() {
   const [note, setNote] = useState<Note | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
-  // Refs for debouncing and animations
-  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Refs for autosave and animations
+  const autoSaveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Load note data based on route parameter
   useEffect(() => {
-    if (id === 'new') {
-      // Handle new note creation - start in edit mode
-      const newNote: Note = {
-        id: Date.now().toString(),
-        title: '',
-        content: '',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        tags: [],
-      };
-      setNote(newNote);
-      setTitle('');
-      setContent('');
-      setIsEditMode(true); // Auto-enable edit mode for new notes
-    } else {
-      // Load existing note - start in read-only mode
-      const existingNote = SAMPLE_NOTES.find(n => n.id === id);
-      if (existingNote) {
-        setNote(existingNote);
-        setTitle(existingNote.title);
-        setContent(existingNote.content);
-        setIsEditMode(false); // Start in read-only mode
+    const loadNote = async () => {
+      if (id === 'new') {
+        // Handle new note creation - start in edit mode
+        const newNote: Note = {
+          id: Date.now().toString(),
+          title: '',
+          content: '',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          tags: [],
+        };
+        setNote(newNote);
+        setTitle('');
+        setContent('');
+        setTags([]);
+        setIsEditMode(true); // Auto-enable edit mode for new notes
       } else {
-        // Note not found - show error and navigate to notes list
-        Alert.alert(
-          'Note Not Found',
-          'The note you are looking for could not be found. It may have been deleted.',
-          [
-            {
-              text: 'OK',
-              onPress: () => router.replace('/(main)/(tabs)/notes'),
-            },
-          ]
-        );
-      }
-    }
+        // Try to load from local storage first
+        try {
+          const localData = await AsyncStorage.getItem(`note_draft_${id}`);
+          if (localData) {
+            const draft = JSON.parse(localData);
+            setTitle(draft.title);
+            setContent(draft.content);
+            if (draft.tags) setTags(draft.tags);
+            console.log('Loaded draft from local storage');
+          }
+        } catch (error) {
+          console.error('Error loading draft:', error);
+        }
 
-    // Fade in animation
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+        // Load existing note - start in read-only mode
+        const existingNote = await getNoteById(id);
+        if (existingNote) {
+          setNote(existingNote);
+          // Only set title/content/tags if no draft was loaded
+          if (!title && !content) {
+            setTitle(existingNote.title);
+            setContent(existingNote.content);
+            setTags(existingNote.tags || []);
+          }
+          setIsEditMode(false); // Start in read-only mode
+        } else {
+          // Note not found - show error and navigate to notes list
+          Alert.alert(
+            'Note Not Found',
+            'The note you are looking for could not be found. It may have been deleted.',
+            [
+              {
+                text: 'OK',
+                onPress: () => router.replace('/(main)/(tabs)/notes'),
+              },
+            ]
+          );
+        }
+      }
+
+      // Fade in animation
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    };
+
+    loadNote();
   }, [id, fadeAnim, router]);
 
-  // Debounced save function (2 second delay)
-  const debouncedSave = useCallback(() => {
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
+  // Save to local storage immediately on change (silently, no UI indicator)
+  const saveToLocalStorage = useCallback(async () => {
+    if (!note) return;
+    
+    try {
+      const draft = {
+        title,
+        content,
+        timestamp: new Date().toISOString(),
+      };
+      await AsyncStorage.setItem(`note_draft_${note.id}`, JSON.stringify(draft));
+      // Silent save - no status update, no setSaveStatus call
+    } catch (error) {
+      console.error('Error saving to local storage:', error);
     }
+  }, [note, title, content]);
 
-    saveTimeoutRef.current = setTimeout(() => {
-      saveNote();
-    }, 2000);
-  }, [title, content]);
+  // Use ref to store latest values without triggering re-renders
+  const titleRef = useRef(title);
+  const contentRef = useRef(content);
+  const tagsRef = useRef(tags);
+  
+  useEffect(() => {
+    titleRef.current = title;
+    contentRef.current = content;
+    tagsRef.current = tags;
+  }, [title, content, tags]);
 
-  // Save note function with retry logic
+  // Save note function with retry logic (uses refs to avoid recreating on every keystroke)
   const saveNote = useCallback(async (retryCount = 0) => {
     if (!note) return;
 
@@ -110,16 +153,26 @@ export default function NoteDetailScreen() {
       // Simulate save operation
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Update note with new data
+      // Update note with new data using refs for latest values
       const updatedNote: Note = {
         ...note,
-        title,
-        content,
+        title: titleRef.current,
+        content: contentRef.current,
+        tags: tagsRef.current,
         updated_at: new Date().toISOString(),
       };
 
-      // In a real app, this would save to backend/database
+      // Save to storage
+      await saveNoteToStorage(updatedNote);
       console.log('Note saved:', updatedNote);
+
+      // Clear local storage draft after successful save
+      try {
+        await AsyncStorage.removeItem(`note_draft_${note.id}`);
+        console.log('Cleared local storage draft');
+      } catch (error) {
+        console.error('Error clearing draft:', error);
+      }
 
       setIsDirty(false);
       setSaveStatus('saved');
@@ -173,21 +226,73 @@ export default function NoteDetailScreen() {
         );
       }
     }
-  }, [note, title, content]);
+  }, [note]);
 
   // Handle title change
   const handleTitleChange = useCallback((text: string) => {
     setTitle(text);
     setIsDirty(true);
-    debouncedSave();
-  }, [debouncedSave]);
+    // Save to local storage silently (no status indicator)
+    if (note) {
+      AsyncStorage.setItem(`note_draft_${note.id}`, JSON.stringify({
+        title: text,
+        content: contentRef.current,
+        tags: tagsRef.current,
+        timestamp: new Date().toISOString(),
+      })).catch(err => console.error('Error saving draft:', err));
+    }
+  }, [note]);
 
   // Handle content change
   const handleContentChange = useCallback((text: string) => {
     setContent(text);
     setIsDirty(true);
-    debouncedSave();
-  }, [debouncedSave]);
+    // Save to local storage silently (no status indicator)
+    if (note) {
+      AsyncStorage.setItem(`note_draft_${note.id}`, JSON.stringify({
+        title: titleRef.current,
+        content: text,
+        tags: tagsRef.current,
+        timestamp: new Date().toISOString(),
+      })).catch(err => console.error('Error saving draft:', err));
+    }
+  }, [note]);
+
+  // Handle adding a tag
+  const handleAddTag = useCallback(() => {
+    const trimmedTag = newTag.trim();
+    if (trimmedTag && !tags.includes(trimmedTag)) {
+      const updatedTags = [...tags, trimmedTag];
+      setTags(updatedTags);
+      setNewTag('');
+      setIsDirty(true);
+      // Save to local storage
+      if (note) {
+        AsyncStorage.setItem(`note_draft_${note.id}`, JSON.stringify({
+          title: titleRef.current,
+          content: contentRef.current,
+          tags: updatedTags,
+          timestamp: new Date().toISOString(),
+        })).catch(err => console.error('Error saving draft:', err));
+      }
+    }
+  }, [newTag, tags, note]);
+
+  // Handle removing a tag
+  const handleRemoveTag = useCallback((tagToRemove: string) => {
+    const updatedTags = tags.filter(tag => tag !== tagToRemove);
+    setTags(updatedTags);
+    setIsDirty(true);
+    // Save to local storage
+    if (note) {
+      AsyncStorage.setItem(`note_draft_${note.id}`, JSON.stringify({
+        title: titleRef.current,
+        content: contentRef.current,
+        tags: updatedTags,
+        timestamp: new Date().toISOString(),
+      })).catch(err => console.error('Error saving draft:', err));
+    }
+  }, [tags, note]);
 
   // Handle back navigation
   const handleBack = useCallback(() => {
@@ -222,20 +327,18 @@ export default function NoteDetailScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              // In a real app, this would delete from backend/database
-              await new Promise(resolve => setTimeout(resolve, 500));
-              console.log('Note deleted:', note?.id);
-              Alert.alert('Success', 'Note deleted successfully', [
-                {
-                  text: 'OK',
-                  onPress: () => router.replace('/(main)/(tabs)/notes'),
-                },
-              ]);
+              if (note?.id) {
+                await deleteNoteFromStorage(note.id);
+                // Clear draft as well
+                await AsyncStorage.removeItem(`note_draft_${note.id}`);
+                console.log('Note deleted:', note.id);
+                router.replace('/(main)/(tabs)/notes');
+              }
             } catch (error) {
               console.error('Failed to delete note:', error);
               Alert.alert(
                 'Delete Failed',
-                'Unable to delete note. Please check your connection and try again.',
+                'Unable to delete note. Please try again.',
                 [
                   {
                     text: 'Try Again',
@@ -254,16 +357,37 @@ export default function NoteDetailScreen() {
     );
   }, [note, router]);
 
-  // Save on unmount if dirty and cleanup timeouts
+  // Set up 30-second autosave interval
+  useEffect(() => {
+    if (!note || !isEditMode) return;
+
+    // Save every 30 seconds
+    autoSaveIntervalRef.current = setInterval(() => {
+      if (isDirty) {
+        console.log('Auto-saving (30s interval)...');
+        saveNote();
+      }
+    }, 30000); // 30 seconds
+
+    return () => {
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+      }
+    };
+  }, [note, isEditMode, isDirty, saveNote]);
+
+  // Save on unmount if dirty and cleanup
   useEffect(() => {
     return () => {
-      if (isDirty && saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
+      if (isDirty) {
         // Force immediate save on unmount
         saveNote();
       }
       if (saveStatusTimeoutRef.current) {
         clearTimeout(saveStatusTimeoutRef.current);
+      }
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
       }
     };
   }, [isDirty, saveNote]);
@@ -385,6 +509,52 @@ export default function NoteDetailScreen() {
               </Text>
             </TouchableOpacity>
           )}
+
+          {/* Tags Section */}
+          <View className="py-4 border-b border-gray-800">
+            <View className="flex-row flex-wrap items-center">
+              {tags.map((tag, index) => (
+                <View
+                  key={`${tag}-${index}`}
+                  className="bg-gray-800 rounded-full px-3 py-1 mr-2 mb-2 flex-row items-center"
+                >
+                  <Text className="text-gray-300 text-sm mr-1">{tag}</Text>
+                  {isEditMode && (
+                    <TouchableOpacity
+                      onPress={() => handleRemoveTag(tag)}
+                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
+                      <Ionicons name="close-circle" size={16} color="#9CA3AF" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              ))}
+              
+              {isEditMode && (
+                <View className="flex-row items-center">
+                  <TextInput
+                    value={newTag}
+                    onChangeText={setNewTag}
+                    onSubmitEditing={handleAddTag}
+                    placeholder="Add tag..."
+                    placeholderTextColor="#6B7280"
+                    className="text-white text-sm bg-gray-900 rounded-full px-3 py-1 mr-2"
+                    style={{ minWidth: 100 }}
+                    returnKeyType="done"
+                  />
+                  {newTag.trim() && (
+                    <TouchableOpacity onPress={handleAddTag}>
+                      <Ionicons name="add-circle" size={24} color="#3B82F6" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+              
+              {!isEditMode && tags.length === 0 && (
+                <Text className="text-gray-500 text-sm">No tags</Text>
+              )}
+            </View>
+          </View>
 
           {/* Content - editable or read-only based on mode */}
           {isEditMode ? (

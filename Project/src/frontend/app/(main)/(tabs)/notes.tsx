@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   View,
   FlatList,
@@ -10,9 +10,9 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Note, SortOption } from '../../../types/note';
-import { SAMPLE_NOTES } from '../../../data/sampleNotes';
+import { getAllNotes, initializeNotes } from '../../../utils/noteStorage';
 import { filterNotesBySearch, sortNotes } from '../../../utils/noteUtils';
 import NotesHeader from '../../../components/NotesHeader';
 import SearchBar from '../../../components/SearchBar';
@@ -44,9 +44,40 @@ export default function NotesScreen() {
   // State management for notes list
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('date-desc');
-  const [notes] = useState<Note[]>(SAMPLE_NOTES);
-  const [isLoading] = useState(false);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Load notes on mount
+  useEffect(() => {
+    loadNotes();
+  }, []);
+
+  // Reload notes when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadNotes();
+    }, [])
+  );
+
+  const loadNotes = async () => {
+    try {
+      setIsLoading(true);
+      const loadedNotes = await getAllNotes();
+      if (loadedNotes.length === 0) {
+        // Initialize with sample notes if empty
+        const initialized = await initializeNotes();
+        setNotes(initialized);
+      } else {
+        setNotes(loadedNotes);
+      }
+    } catch (error) {
+      console.error('Error loading notes:', error);
+      Alert.alert('Error', 'Failed to load notes');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Filtered and sorted notes using useMemo for performance
   const displayedNotes = useMemo(() => {
@@ -78,9 +109,7 @@ export default function NotesScreen() {
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      // Simulate refresh - in real app, this would fetch from backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // In a real app, handle potential errors from API
+      await loadNotes();
     } catch (error) {
       console.error('Failed to refresh notes:', error);
       Alert.alert(
