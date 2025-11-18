@@ -1,22 +1,29 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { 
-  Box, 
-  VStack, 
+import {
+  Box,
+  VStack,
   HStack,
   Center,
-  Heading, 
-  Text, 
-  Button, 
+  Heading,
+  Text,
+  Button,
   ButtonText,
   Input,
   InputField,
   Pressable,
 } from "@/components/ui";
-import { StatusBar } from 'expo-status-bar';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, SafeAreaView, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '@/lib/supabase';
+import { StatusBar } from "expo-status-bar";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -46,29 +53,32 @@ export default function LoginPage() {
       if (data.session) {
         // Successfully logged in
         router.dismissAll();
-        router.replace("/(main)/home");
+        router.replace("/(main)/(tabs)/notes");
+        return;
       }
     } catch (error) {
       Alert.alert("Error", "An unexpected error occurred");
       console.error("Login error:", error);
+      return;
     } finally {
       setIsLoading(false);
       router.dismissAll();
       router.replace("/(main)/(tabs)/notes");
-    }, 1000);
+      return;
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Box className="flex-1 bg-black">
         <StatusBar style="light" />
-        
+
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : undefined}
           style={styles.keyboardView}
           keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
-          <ScrollView 
+          <ScrollView
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
@@ -90,14 +100,17 @@ export default function LoginPage() {
                   <Heading size="3xl" className="text-white text-center mb-2">
                     Welcome Back
                   </Heading>
-                  
+
                   <Text size="md" className="text-gray-400 text-center">
                     Sign in to your notes
                   </Text>
                 </VStack>
 
                 {/* Login Form */}
-                <VStack space="lg" className="bg-gray-900 rounded-3xl p-6 border border-gray-800">
+                <VStack
+                  space="lg"
+                  className="bg-gray-900 rounded-3xl p-6 border border-gray-800"
+                >
                   <VStack space="md">
                     <Text className="text-gray-300 font-medium">Email</Text>
                     <Input
@@ -137,14 +150,14 @@ export default function LoginPage() {
                         className="text-white"
                         style={styles.inputField}
                       />
-                      <Pressable 
+                      <Pressable
                         onPress={() => setShowPassword(!showPassword)}
                         className="pr-3"
                       >
-                        <Ionicons 
-                          name={showPassword ? "eye-off" : "eye"} 
-                          size={20} 
-                          color="#9CA3AF" 
+                        <Ionicons
+                          name={showPassword ? "eye-off" : "eye"}
+                          size={20}
+                          color="#9CA3AF"
                         />
                       </Pressable>
                     </Input>
@@ -189,19 +202,19 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: "#000000",
   },
   keyboardView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   input: {
-    backgroundColor: '#000000',
+    backgroundColor: "#000000",
   },
   inputField: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   } as any,
 });
