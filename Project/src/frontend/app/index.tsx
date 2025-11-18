@@ -1,5 +1,4 @@
 import { useRouter } from "expo-router";
-import { StyleSheet } from "react-native";
 import { 
   Box, 
   VStack, 
@@ -9,7 +8,6 @@ import {
   Text,
   Button,
   ButtonText,
-  Pressable
 } from "@/components/ui";
 import { StatusBar } from 'expo-status-bar';
 
@@ -94,9 +92,3 @@ function FeatureItem({ icon, text }: { icon: string; text: string }) {
     </HStack>
   );
 }
-
-const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-});

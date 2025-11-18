@@ -30,7 +30,7 @@ export default function LoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       router.dismissAll();
-      router.replace("/(main)/home");
+      router.replace("/(main)/(tabs)/notes");
     }, 1000);
   };
 
