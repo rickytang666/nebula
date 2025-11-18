@@ -1,8 +1,10 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+DROP TRIGGER IF EXISTS profiles_set_updated_at ON public.profiles;
 DROP TRIGGER IF EXISTS notes_set_updated_at ON public.notes;
 DROP FUNCTION IF EXISTS public.set_current_timestamp_on_update();
 DROP TABLE IF EXISTS public.notes;
+DROP TABLE IF EXISTS public.profiles;
 
 -- notes table references auth.users directly
 -- if you need extra user data later, create a profiles table
