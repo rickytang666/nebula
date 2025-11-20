@@ -17,6 +17,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
+import AIToolsModal from '../../../components/AIToolsModal';
 import { Note } from '../../../types/note';
 import { getNoteById, saveNote as saveNoteToStorage, deleteNote as deleteNoteFromStorage } from '../../../utils/noteStorage';
 
@@ -37,6 +38,7 @@ export default function NoteDetailScreen() {
   const [newTag, setNewTag] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [aiModalVisible, setAiModalVisible] = useState(false);
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
@@ -303,6 +305,10 @@ export default function NoteDetailScreen() {
     router.back();
   }, [isDirty, saveNote, router]);
 
+  const toggleAIMode = useCallback(() => {
+    setAiModalVisible(!aiModalVisible);
+  }, [aiModalVisible]);
+
   // Toggle edit mode
   const toggleEditMode = useCallback(() => {
     if (isEditMode && isDirty) {
@@ -450,6 +456,22 @@ export default function NoteDetailScreen() {
               </View>
             )}
 
+            {/* AI button */}
+            <TouchableOpacity
+              onPress={toggleAIMode}
+              className="p-2 mr-2"
+              style={{ minWidth: 44, minHeight: 44 }}
+              accessibilityLabel="Toggle AI mode"
+              accessibilityRole="button"
+            >
+              <Ionicons 
+                name="sparkles"
+                size={24}
+                color="#FFFFFF"
+              />
+
+            </TouchableOpacity>
+
             {/* Edit/Done button */}
             <TouchableOpacity
               onPress={toggleEditMode}
@@ -584,6 +606,14 @@ export default function NoteDetailScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
       </Animated.View>
+
+      {/* AI Tools Modal */}
+      <AIToolsModal
+        visible={aiModalVisible}
+        onClose={() => setAiModalVisible(false)}
+        noteContent={content}
+        noteTitle={title}
+      />
     </SafeAreaView>
   );
 }
