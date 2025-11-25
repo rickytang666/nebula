@@ -17,16 +17,16 @@ backend_dir = Path(__file__).parent.parent
 load_dotenv(backend_dir / ".env")
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
 
 def create_test_user():
     """Create a test user and return JWT token"""
     
-    if not SUPABASE_URL or not SUPABASE_KEY:
-        print("❌ Error: SUPABASE_URL and SUPABASE_KEY not found in .env")
+    if not SUPABASE_URL or not SUPABASE_ANON_KEY:
+        print("❌ Error: SUPABASE_URL and SUPABASE_ANON_KEY not found in .env")
         return None
     
-    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
     
     # Test credentials
     test_email = "test@example.com"

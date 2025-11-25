@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 ```env
 SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_KEY=your_supabase_service_role_key
 ```
 
@@ -85,4 +85,27 @@ curl http://localhost:8000/health
 # get current user (requires auth)
 curl -H "Authorization: Bearer <your_jwt_token>" \
      http://localhost:8000/users/me
+```
+
+## deployment (google cloud run)
+
+prerequisites:
+- google cloud project with billing enabled
+- `gcloud` cli installed and initialized
+
+1. run the deployment script:
+
+```bash
+./deploy.sh
+```
+
+2. follow the prompts to enter your project id.
+
+3. **important**: after deployment, you must update the environment variables with your actual supabase credentials.
+
+```bash
+gcloud run services update backend-api \
+  --update-env-vars SUPABASE_URL=your_url,SUPABASE_ANON_KEY=your_key,SUPABASE_SERVICE_KEY=your_service_key \
+  --project your_project_id \
+  --region us-central1
 ```
