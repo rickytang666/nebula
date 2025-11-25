@@ -1,0 +1,49 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  PROJECT_ID: "notes-app-479318"
+  REGION: "us-central1"
+  SERVICE_NAME: "backend-api"
+  REPO_NAME: "cloud-run-source-deploy"
+  IMAGE: "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/backend-api"
+
+# -----------------------
+# Build job — runs on ALL branches
+# -----------------------
+build:
+  stage: build
+  image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "$GCLOUD_SERVICE_KEY" | base64 -d > /tmp/key.json
+    - gcloud auth activate-service-account --key-file=/tmp/key.json
+    - gcloud config set project $PROJECT_ID
+    - gcloud auth configure-docker $REGION-docker.pkg.dev
+    - docker build -t $IMAGE:$CI_COMMIT_SHA -f Project/src/backend/Dockerfile Project/src/backend
+    - docker push $IMAGE:$CI_COMMIT_SHA
+  except:
+    - schedules
+
+# -----------------------
+# Deploy — ONLY on production branch
+# -----------------------
+deploy:
+  stage: deploy
+  image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  script:
+    - echo "$GCLOUD_SERVICE_KEY" | base64 -d > /tmp/key.json
+    - gcloud auth activate-service-account --key-file=/tmp/key.json
+    - gcloud config set project $PROJECT_ID
+    - gcloud run deploy $SERVICE_NAME \
+        --image $IMAGE:$CI_COMMIT_SHA \
+        --platform managed \
+        --region $REGION \
+        --allow-unauthenticated
+  only:
+    - issue-#11-notes-app
