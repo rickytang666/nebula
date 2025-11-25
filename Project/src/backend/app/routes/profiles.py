@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from app.core.database import get_supabase
+from app.core.database import get_supabase_admin
 from app.core.auth import get_current_user
 from supabase import Client
 
@@ -34,7 +34,7 @@ class ProfileUpdate(BaseModel):
 async def create_profile(
     profile: ProfileCreate,
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_supabase_admin)
 ):
     """
     Create a new profile for the current authenticated user.
@@ -65,7 +65,7 @@ async def create_profile(
 @router.get("/me", response_model=ProfileResponse)
 async def get_current_user_profile(
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_supabase_admin)
 ):
     """
     Get the profile for the currently authenticated user.
@@ -83,7 +83,7 @@ async def get_current_user_profile(
 async def update_current_user_profile(
     profile: ProfileUpdate,
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_supabase_admin)
 ):
     """
     Update the profile for the currently authenticated user.
