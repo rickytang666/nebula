@@ -21,7 +21,7 @@ build:
     - gcloud auth activate-service-account --key-file=/tmp/key.json
     - gcloud config set project $PROJECT_ID
     - gcloud auth configure-docker $REGION-docker.pkg.dev
-    - docker build -t $IMAGE:$CI_COMMIT_SHA -f Project/src/backend/Dockerfile Project/src/backend
+    - docker build --platform linux/amd64 -t $IMAGE:$CI_COMMIT_SHA -f Project/src/backend/Dockerfile Project/src/backend
     - docker push $IMAGE:$CI_COMMIT_SHA
   except:
     - schedules
