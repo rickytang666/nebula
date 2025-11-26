@@ -15,6 +15,9 @@ variables:
 build:
   stage: build
   image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  before_script:
+    - echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    - echo "nameserver 8.8.4.4" >> /etc/resolv.conf
   script:
     - apk add --no-cache docker
     - echo "$GCLOUD_SERVICE_KEY" | base64 -d > /tmp/key.json
@@ -32,6 +35,9 @@ build:
 deploy:
   stage: deploy
   image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  before_script:
+    - echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    - echo "nameserver 8.8.4.4" >> /etc/resolv.conf
   script:
     - echo "$GCLOUD_SERVICE_KEY" | base64 -d > /tmp/key.json
     - gcloud auth activate-service-account --key-file=/tmp/key.json
