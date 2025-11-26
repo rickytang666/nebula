@@ -17,7 +17,7 @@ router = APIRouter(prefix="/embeddings", tags=["embeddings"])
 
 # ---------------------------
 # Models
-# ---------------------------
+# --------------------------
 
 class EmbeddingResponse(BaseModel):
     """Response model for embedding operations."""
