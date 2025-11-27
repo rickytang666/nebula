@@ -18,29 +18,54 @@ async function fetchWithAuth(endpoint: string, options: FetchOptions = {}) {
   const { data: { session } } = await supabase.auth.getSession();
   const token = session?.access_token;
 
+  if (!token) {
+    console.log('[API] No token found, aborting request');
+    throw new Error('Not authenticated');
+  }
+
   const headers = {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     ...options.headers,
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
   const url = `${API_URL}${endpoint}`;
   console.log(`[API] Fetching: ${url}`);
+  console.log(`[API] Token present: ${!!token}`);
+
   const response = await fetch(url, {
     ...options,
     headers,
   });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `API Error: ${response.statusText}`);
-  }
+  console.log(`[API] Response Status: ${response.status}`);
 
   if (response.status === 204) {
     return null;
   }
 
-  return response.json();
+  const text = await response.text();
+  console.log(`[API] Response Body Preview: ${text.substring(0, 200)}`);
+
+  if (!response.ok) {
+    let errorDetail = `API Error: ${response.statusText}`;
+    try {
+      const errorData = JSON.parse(text);
+      errorDetail = errorData.detail || errorDetail;
+    } catch (e) {
+      // If parsing fails, use the raw text if it's short, otherwise status text
+      if (text.length < 100) errorDetail = text;
+    }
+    throw new Error(errorDetail);
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("[API] JSON Parse Error:", e);
+    throw new Error(`Invalid JSON response from server: ${text.substring(0, 100)}...`);
+  }
 }
 
 export const api = {

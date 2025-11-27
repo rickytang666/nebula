@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { useAuth } from '../../../contexts/AuthContext';
 import { Note, SortOption } from '../../../types/note';
 import { getAllNotes, initializeNotes } from '../../../utils/noteStorage';
 import { filterNotesBySearch, sortNotes } from '../../../utils/noteUtils';
@@ -42,6 +43,7 @@ export default function NotesScreen() {
   }, [width]);
 
   // State management for notes list
+  const { session } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('date-desc');
   const [notes, setNotes] = useState<Note[]>([]);
@@ -50,17 +52,22 @@ export default function NotesScreen() {
 
   // Load notes on mount
   useEffect(() => {
-    loadNotes();
-  }, []);
+    if (session) {
+      loadNotes();
+    }
+  }, [session]);
 
   // Reload notes when screen comes into focus
   useFocusEffect(
     useCallback(() => {
-      loadNotes();
-    }, [])
+      if (session) {
+        loadNotes();
+      }
+    }, [session])
   );
 
   const loadNotes = async () => {
+    if (!session) return;
     try {
       setIsLoading(true);
       const loadedNotes = await getAllNotes();
@@ -152,7 +159,7 @@ export default function NotesScreen() {
     if (searchQuery && displayedNotes.length === 0) {
       // No search results
       return (
-        <View 
+        <View
           className="flex-1 items-center justify-center py-20"
           accessibilityLabel={`No notes found for ${searchQuery}`}
         >
@@ -167,7 +174,7 @@ export default function NotesScreen() {
     if (notes.length === 0) {
       // No notes at all
       return (
-        <View 
+        <View
           className="flex-1 items-center justify-center py-20"
           accessibilityLabel="No notes yet. Create your first note to get started"
         >
@@ -210,7 +217,7 @@ export default function NotesScreen() {
   return (
     <SafeAreaView className="flex-1 bg-black" edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
-      
+
       <View className="flex-1 pt-4" style={{ paddingHorizontal: horizontalPadding }}>
         {/* Header with title and New Note button */}
         <NotesHeader onNewNote={handleNewNote} />

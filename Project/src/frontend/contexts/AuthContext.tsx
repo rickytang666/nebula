@@ -19,28 +19,21 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
-      if (error) {
-        console.log("Error getting session:", error.message);
-        // If the refresh token is invalid, we should just log the user out (which happens by default if session is null)
-      }
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
-    }).catch((err) => {
-      console.error("Unexpected error getting session:", err);
       setLoading(false);
     });
 
@@ -48,24 +41,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("[AuthContext] State change:", _event, "Session:", !!session);
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signOut = async () => {
+    console.log("[AuthContext] signOut() called");
+
+    // First clear state immediately
+    setSession(null);
+    setUser(null);
+
+    // Then sign out from Supabase AND force clear storage
     await supabase.auth.signOut();
+
+    // Force clear AsyncStorage to prevent session restoration
+    const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
+    const keys = await AsyncStorage.getAllKeys();
+    const supabaseKeys = keys.filter(key => key.startsWith('supabase') || key.includes('auth'));
+    await AsyncStorage.multiRemove(supabaseKeys);
+
+    console.log("[AuthContext] signOut() complete, cleared", supabaseKeys.length, "keys");
   };
 
-  const value = {
-    session,
-    user,
-    loading,
-    signOut,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+  return (
+    <AuthContext.Provider value={{ session, user, loading, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}

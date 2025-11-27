@@ -1,7 +1,8 @@
 import { useRouter } from "expo-router";
-import { 
-  Box, 
-  VStack, 
+import { useEffect } from "react";
+import {
+  Box,
+  VStack,
   HStack,
   Center,
   Heading,
@@ -14,6 +15,11 @@ import { StatusBar } from 'expo-status-bar';
 export default function LandingPage() {
   const router = useRouter();
 
+  useEffect(() => {
+    console.log("[Landing Page] MOUNTED");
+    return () => console.log("[Landing Page] UNMOUNTED");
+  }, []);
+
   return (
     <Box className="flex-1 bg-black">
       <StatusBar style="light" />
@@ -24,11 +30,11 @@ export default function LandingPage() {
             <Box className="w-24 h-24 rounded-full bg-white items-center justify-center mb-6">
               <Text className="text-6xl">📝</Text>
             </Box>
-            
+
             <Heading size="3xl" className="text-white text-center mb-2">
               Notes
             </Heading>
-            
+
             <Text size="lg" className="text-gray-400 text-center">
               Simple. Clean. Organized.
             </Text>
@@ -36,16 +42,16 @@ export default function LandingPage() {
 
           {/* Features */}
           <VStack space="md" className="w-full">
-            <FeatureItem 
-              icon="✓" 
+            <FeatureItem
+              icon="✓"
               text="Minimalist note-taking"
             />
-            <FeatureItem 
-              icon="📁" 
+            <FeatureItem
+              icon="📁"
               text="Organize with ease"
             />
-            <FeatureItem 
-              icon="🔒" 
+            <FeatureItem
+              icon="🔒"
               text="Secure and private"
             />
           </VStack>
