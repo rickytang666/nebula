@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { useRouter, Redirect } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Box,
   VStack,
@@ -27,10 +28,15 @@ import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { session, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  if (!loading && session) {
+    return <Redirect href="/(app)/(tabs)/notes" />;
+  }
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -53,7 +59,7 @@ export default function LoginPage() {
       if (data.session) {
         // Successfully logged in
         router.dismissAll();
-        router.replace("/(main)/(tabs)/notes");
+        router.replace("/(app)/(tabs)/notes");
         return;
       }
     } catch (error) {
@@ -160,7 +166,7 @@ export default function LoginPage() {
                     </Input>
                   </VStack>
 
-                  <Pressable onPress={() => {}}>
+                  <Pressable onPress={() => { }}>
                     <Text className="text-gray-400 text-right font-medium">
                       Forgot Password?
                     </Text>
@@ -181,7 +187,7 @@ export default function LoginPage() {
                 {/* Sign Up Link */}
                 <HStack space="xs" className="justify-center">
                   <Text className="text-gray-400">Don't have an account?</Text>
-                  <Pressable onPress={() => router.push("/(auth)/signup")}>
+                  <Pressable onPress={() => router.push("/signup")}>
                     <Text className="text-white font-bold underline">
                       Sign Up
                     </Text>

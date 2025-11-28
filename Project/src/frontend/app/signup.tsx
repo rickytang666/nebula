@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { useRouter, Redirect } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Box,
   VStack,
@@ -40,6 +41,11 @@ export default function SignUpPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { session, loading } = useAuth();
+
+  if (!loading && session) {
+    return <Redirect href="/(app)/(tabs)/notes" />;
+  }
 
   const handleSignUp = async () => {
     // Validation
@@ -94,7 +100,7 @@ export default function SignUpPage() {
             [
               {
                 text: "OK",
-                onPress: () => router.replace("/(auth)/login"),
+                onPress: () => router.replace("/login"),
               },
             ]
           );
@@ -105,7 +111,7 @@ export default function SignUpPage() {
           Alert.alert(
             "Account Created",
             "Your account was created but we encountered an issue setting up your profile. Please contact support.",
-            [{ text: "OK", onPress: () => router.replace("/(auth)/login") }]
+            [{ text: "OK", onPress: () => router.replace("/login") }]
           );
         }
       }
@@ -307,7 +313,7 @@ export default function SignUpPage() {
                   <Text className="text-gray-400">
                     Already have an account?
                   </Text>
-                  <Pressable onPress={() => router.push("/(auth)/login")}>
+                  <Pressable onPress={() => router.push("/login")}>
                     <Text className="text-white font-bold underline">
                       Sign In
                     </Text>

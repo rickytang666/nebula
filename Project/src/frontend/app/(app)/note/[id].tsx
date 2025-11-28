@@ -16,10 +16,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MarkdownRenderer from '../../../components/MarkdownRenderer';
-import AIToolsModal from '../../../components/AIToolsModal';
-import { Note } from '../../../types/note';
-import { getNoteById, saveNote as saveNoteToStorage, deleteNote as deleteNoteFromStorage } from '../../../utils/noteStorage';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
+import AIToolsModal from '@/components/AIToolsModal';
+import { Note } from '@/types/note';
+import { getNoteById, saveNote as saveNoteToStorage, deleteNote as deleteNoteFromStorage } from '@/utils/noteStorage';
 
 export default function NoteDetailScreen() {
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function NoteDetailScreen() {
             [
               {
                 text: 'OK',
-                onPress: () => router.replace('/(main)/(tabs)/notes'),
+                onPress: () => router.replace('/(app)/(tabs)/notes'),
               },
             ]
           );
@@ -303,7 +303,7 @@ export default function NoteDetailScreen() {
           // Clear draft as well
           await AsyncStorage.removeItem(`note_draft_${note.id}`);
           console.log('Note deleted successfully');
-          router.replace('/(main)/(tabs)/notes');
+          router.replace('/(app)/(tabs)/notes');
         } else {
           console.error('No note ID to delete');
         }
