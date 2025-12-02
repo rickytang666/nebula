@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import notes, users, profiles
+from app.routes import notes, users, profiles, ai
 
 app = FastAPI(
     title="Notes App API",
@@ -29,6 +29,7 @@ app.add_middleware(
 app.include_router(notes.router)
 app.include_router(users.router)
 app.include_router(profiles.router)
+app.include_router(ai.router)
 
 @app.get("/")
 def root():
