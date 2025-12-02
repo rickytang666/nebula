@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 // Logic to find the correct server address
 // If you are using an Android Emulator, 'localhost' refers to the emulator itself.
 // We use 10.0.2.2 to refer to your computer's localhost.
-const LOCAL_API_URL = 'http://localhost:8000';
+const LOCAL_API_URL = 'https://localhost:8000';
 const PROD_API_URL = process.env.EXPO_PUBLIC_API_URL;
 const DEV_API_URL = process.env.EXPO_PUBLIC_DEV_API_URL;
 const __DEV__ = process.env.EXPO_PUBLIC__DEV__;
