@@ -35,6 +35,7 @@ def create_embedding(text: str) -> List[float]:
         Exception: If the API call fails
     """
     if not OPENAI_API_KEY:
+        print("Error: OPENAI_API_KEY is not set in environment variables")
         raise ValueError("OPENAI_API_KEY must be set in environment variables")
     
     if not text or len(text.strip()) == 0:
@@ -50,6 +51,7 @@ def create_embedding(text: str) -> List[float]:
         return embedding
     
     except Exception as e:
+        print(f"Error creating embedding: {e}")
         raise Exception(f"Failed to create embedding: {str(e)}")
 
 

@@ -7,8 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
-from app.core.database import get_supabase
-from app.core.auth import get_current_user
+from app.core.auth import get_current_user, get_authenticated_client
 from app.core.embeddings import create_embedding, prepare_note_for_embedding, embed_chunks
 from supabase import Client
 
@@ -57,7 +56,7 @@ async def embed_note(
     note_id: str,
     chunk_size: int = Query(1000, ge=500, le=3000),
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_authenticated_client)
 ):
     """
     Create and store embeddings for a note using semantic chunking.
@@ -150,7 +149,7 @@ async def embed_note(
 async def vector_search(
     search_request: VectorSearchRequest,
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_authenticated_client)
 ):
     """
     Search note chunks using vector similarity (semantic search).
@@ -176,7 +175,7 @@ async def vector_search(
             {
                 "query_embedding": query_embedding,
                 "user_id": current_user["id"],
-                "limit": search_request.limit
+                "search_limit": search_request.limit
             }
         ).execute()
         
@@ -211,7 +210,7 @@ async def vector_search(
 async def embed_all_notes(
     chunk_size: int = Query(1000, ge=500, le=3000),
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_authenticated_client)
 ):
     """
     Create embeddings for all of a user's notes.
@@ -220,12 +219,16 @@ async def embed_all_notes(
         dict: Summary of embedding operation
     """
     try:
+        print(f"[Embed-All] Starting embedding generation for user {current_user['id']}")
+        
         # Fetch all notes
         response = supabase.table("notes").select("*").eq(
             "user_id", current_user["id"]
         ).execute()
         
         notes = response.data or []
+        print(f"[Embed-All] Found {len(notes)} notes to process")
+        
         total_chunks = 0
         failed_count = 0
         errors = []
@@ -233,6 +236,9 @@ async def embed_all_notes(
         # Process each note
         for note in notes:
             try:
+                print(f"[Embed-All] Processing note {note['id']}: '{note.get('title', 'Untitled')}'")
+                print(f"[Embed-All] Content length: {len(note['content'])} characters")
+                
                 # Chunk the note
                 chunks = prepare_note_for_embedding(
                     title=note.get("title", ""),
@@ -240,11 +246,15 @@ async def embed_all_notes(
                     chunk_size=chunk_size
                 )
                 
+                print(f"[Embed-All] Created {len(chunks)} chunks for note {note['id']}")
+                
                 if not chunks:
+                    print(f"[Embed-All] WARNING: No chunks created for note {note['id']}")
                     continue
                 
                 # Embed chunks
                 embedded_chunks = embed_chunks(chunks)
+                print(f"[Embed-All] Embedded {len(embedded_chunks)} chunks")
                 
                 # Delete existing chunks
                 supabase.table("note_chunks").delete().eq("note_id", note["id"]).execute()
@@ -264,22 +274,28 @@ async def embed_all_notes(
                 
                 supabase.table("note_chunks").insert(chunk_records).execute()
                 total_chunks += len(embedded_chunks)
+                print(f"[Embed-All] Successfully stored {len(embedded_chunks)} chunks for note {note['id']}")
             
             except Exception as e:
                 failed_count += 1
+                error_msg = str(e)
+                print(f"[Embed-All] ERROR processing note {note['id']}: {error_msg}")
                 errors.append({
                     "note_id": note["id"],
-                    "error": str(e)
+                    "error": error_msg
                 })
         
-        return {
+        result = {
             "total_notes": len(notes),
             "total_chunks": total_chunks,
             "failed_notes": failed_count,
             "errors": errors if errors else None
         }
+        print(f"[Embed-All] Completed: {result}")
+        return result
     
     except Exception as e:
+        print(f"[Embed-All] FATAL ERROR: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Batch embedding failed: {str(e)}"
@@ -290,7 +306,7 @@ async def embed_all_notes(
 async def get_note_chunks(
     note_id: str,
     current_user: dict = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase)
+    supabase: Client = Depends(get_authenticated_client)
 ):
     """
     Get all chunks for a specific note.

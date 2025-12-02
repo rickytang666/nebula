@@ -95,3 +95,16 @@ export async function deleteNote(id: string): Promise<void> {
 export async function clearAllNotes(): Promise<void> {
   console.warn('clearAllNotes not implemented for API storage');
 }
+
+/**
+ * Generate embeddings for all notes
+ * This is typically called once to initialize embeddings for existing notes
+ */
+export async function generateEmbeddingsForAllNotes(): Promise<void> {
+  try {
+    await api.embeddings.embedAll();
+  } catch (error) {
+    console.error('Error generating embeddings:', error);
+    throw error;
+  }
+}

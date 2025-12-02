@@ -39,7 +39,18 @@ class TextChunker:
         if not text or len(text.strip()) == 0:
             return []
         
-        # Start with paragraph-level splits
+        text = text.strip()
+        
+        # For very short text (less than chunk_size), just return it as a single chunk
+        if len(text) <= self.chunk_size:
+            return [{
+                "content": text,
+                "title": title,
+                "chunk_index": 0,
+                "total_chunks": 1
+            }]
+        
+        # Start with paragraph-level splits for longer text
         chunks = self._split_by_separator(text, self.separator)
         
         # Further split if chunks are still too large
@@ -66,6 +77,15 @@ class TextChunker:
             for idx, chunk in enumerate(overlapped_chunks)
             if chunk.strip()  # Filter out empty chunks
         ]
+        
+        # Ensure we always return at least one chunk if text is not empty
+        if not formatted_chunks and text:
+            formatted_chunks = [{
+                "content": text,
+                "title": title,
+                "chunk_index": 0,
+                "total_chunks": 1
+            }]
         
         return formatted_chunks
     

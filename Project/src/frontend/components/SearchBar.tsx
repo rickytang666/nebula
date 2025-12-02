@@ -5,29 +5,34 @@ import { Ionicons } from '@expo/vector-icons';
 interface SearchBarProps {
   value: string;
   onChangeText: (text: string) => void;
+  onSearch?: () => void;
   placeholder?: string;
 }
 
-export default function SearchBar({ value, onChangeText, placeholder = 'Search notes...' }: SearchBarProps) {
+export default function SearchBar({ value, onChangeText, onSearch, placeholder = 'Search notes...' }: SearchBarProps) {
   const handleClear = () => {
     onChangeText('');
   };
 
   return (
     <View className="bg-gray-900 rounded-xl border border-gray-700 flex-row items-center px-4" style={{ minHeight: 48 }}>
-      <Ionicons name="search" size={20} color="#9CA3AF" />
+      <Pressable onPress={onSearch} hitSlop={8}>
+        <Ionicons name="search" size={20} color="#9CA3AF" />
+      </Pressable>
       <TextInput
         className="flex-1 text-white ml-3 text-base"
         value={value}
         onChangeText={onChangeText}
+        onSubmitEditing={onSearch}
+        returnKeyType="search"
         placeholder={placeholder}
         placeholderTextColor="#6B7280"
         accessibilityLabel="Search notes"
         accessibilityHint="Type to search notes by title"
       />
       {value.length > 0 && (
-        <Pressable 
-          onPress={handleClear} 
+        <Pressable
+          onPress={handleClear}
           hitSlop={12}
           style={{ minWidth: 44, minHeight: 44, justifyContent: 'center', alignItems: 'center' }}
           accessibilityLabel="Clear search"

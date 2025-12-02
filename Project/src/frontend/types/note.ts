@@ -10,6 +10,15 @@ export interface Note {
   user_id?: string; // For future multi-user support
 }
 
+export interface SemanticSearchResult {
+  chunk_id: string;
+  note_id: string;
+  content: string;
+  similarity: number;
+  chunk_index: number;
+  total_chunks: number;
+}
+
 /**
  * Sort options for notes list
  */

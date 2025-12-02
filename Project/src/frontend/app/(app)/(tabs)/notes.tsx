@@ -9,17 +9,20 @@ import {
   useWindowDimensions,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
-import { Note, SortOption } from '@/types/note';
-import { getAllNotes, initializeNotes } from '@/utils/noteStorage';
+import SemanticSearchToggle from '@/components/SemanticSearchToggle';
+import { api } from '@/services/api';
+import { getAllNotes, initializeNotes, generateEmbeddingsForAllNotes } from '@/utils/noteStorage';
 import { filterNotesBySearch, sortNotes } from '@/utils/noteUtils';
 import NotesHeader from '@/components/NotesHeader';
 import SearchBar from '@/components/SearchBar';
 import SortControls from '@/components/SortControls';
 import NoteCard from '@/components/NoteCard';
 import NoteCardSkeleton from '@/components/NoteCardSkeleton';
+import { Note, SortOption, SemanticSearchResult } from '@/types/note';
 
 export default function NotesScreen() {
   const router = useRouter();
@@ -45,17 +48,55 @@ export default function NotesScreen() {
   // State management for notes list
   const { session } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('date-desc');
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSemanticSearch, setIsSemanticSearch] = useState(false);
+  const [semanticResults, setSemanticResults] = useState<SemanticSearchResult[]>([]); // Keep for reference if needed, or remove
+  const [semanticMatchedNotes, setSemanticMatchedNotes] = useState<Note[]>([]);
+  const [isSearchingSemantic, setIsSearchingSemantic] = useState(false);
 
   // Load notes on mount
   useEffect(() => {
     if (session) {
+      //      clearEmbeddingsFlag(); // Add before initializeEmbeddings()
       loadNotes();
+      initializeEmbeddings();
     }
   }, [session]);
+
+  // Initialize embeddings for existing notes (one-time operation)
+  const initializeEmbeddings = async () => {
+    try {
+      const EMBEDDINGS_INITIALIZED_KEY = 'embeddings_initialized';
+      const initialized = await AsyncStorage.getItem(EMBEDDINGS_INITIALIZED_KEY);
+
+      if (!initialized) {
+        console.log('[Embeddings] Generating embeddings for all notes...');
+        await generateEmbeddingsForAllNotes();
+        await AsyncStorage.setItem(EMBEDDINGS_INITIALIZED_KEY, 'true');
+        console.log('[Embeddings] Successfully initialized embeddings');
+      } else {
+        console.log('[Embeddings] Already initialized, skipping');
+      }
+    } catch (error) {
+      console.error('[Embeddings] Failed to initialize embeddings:', error);
+      // Don't show error to user, embeddings will be generated on next note update
+    }
+  };
+
+  // Temporary: Clear embeddings flag to force re-initialization
+  // Remove this after testing
+  const clearEmbeddingsFlag = async () => {
+    try {
+      await AsyncStorage.removeItem('embeddings_initialized');
+      console.log('[Embeddings] Flag cleared, will re-initialize on next load');
+    } catch (error) {
+      console.error('[Embeddings] Failed to clear flag:', error);
+    }
+  };
 
   // Reload notes when screen comes into focus
   useFocusEffect(
@@ -88,13 +129,94 @@ export default function NotesScreen() {
 
   // Filtered and sorted notes using useMemo for performance
   const displayedNotes = useMemo(() => {
-    const filtered = filterNotesBySearch(notes, searchQuery);
+    // Use submittedQuery for filtering instead of searchQuery
+    const filtered = filterNotesBySearch(notes, submittedQuery);
     return sortNotes(filtered, sortBy);
-  }, [notes, searchQuery, sortBy]);
+  }, [notes, submittedQuery, sortBy]);
+
 
   // Event handlers with useCallback for optimization
   const handleSearchChange = useCallback((text: string) => {
     setSearchQuery(text);
+    // Clear results if text is empty, but don't auto-search
+    if (text.length === 0) {
+      setSubmittedQuery('');
+      setSemanticResults([]);
+      setSemanticMatchedNotes([]);
+    }
+  }, []);
+
+  const handleSearchSubmit = useCallback(() => {
+    if (searchQuery.length === 0) return;
+
+    if (isSemanticSearch) {
+      performSemanticSearch(searchQuery);
+    } else {
+      setSubmittedQuery(searchQuery);
+      setSemanticMatchedNotes([]); // Clear semantic results if switching to regular search
+    }
+  }, [searchQuery, isSemanticSearch]);
+
+  const performSemanticSearch = async (query: string) => {
+    try {
+      setIsSearchingSemantic(true);
+      console.log('[Semantic Search] Starting search for:', query);
+
+      const response = await api.embeddings.search(query);
+      console.log('[Semantic Search] API response:', response);
+
+      const results = response.results || [];
+      console.log('[Semantic Search] Results count:', results.length);
+      console.log('[Semantic Search] Results:', results);
+
+      // Extract unique note IDs from results
+      const uniqueNoteIds = Array.from(new Set(results.map((r: SemanticSearchResult) => r.note_id)));
+      console.log('[Semantic Search] Unique note IDs from results:', uniqueNoteIds);
+      console.log('[Semantic Search] Currently loaded notes:', notes.length);
+      console.log('[Semantic Search] Loaded note IDs:', notes.map(n => n.id));
+
+      // Filter local notes to find matches
+      // Note: This assumes all notes are already loaded in 'notes' state.
+      // If we have pagination, we might need to fetch these notes from backend.
+      // For MVP, we'll use loaded notes.
+      const matchedNotes = notes.filter(note => uniqueNoteIds.includes(note.id));
+      console.log('[Semantic Search] Matched notes count:', matchedNotes.length);
+      console.log('[Semantic Search] Matched notes:', matchedNotes);
+
+      // Sort matched notes by similarity (using the first chunk's similarity as proxy)
+      // We create a map of note_id -> max_similarity
+      const similarityMap = new Map<string, number>();
+      results.forEach((r: SemanticSearchResult) => {
+        const current = similarityMap.get(r.note_id) || 0;
+        if (r.similarity > current) {
+          similarityMap.set(r.note_id, r.similarity);
+        }
+      });
+
+      const sortedMatchedNotes = matchedNotes.sort((a, b) => {
+        const simA = similarityMap.get(a.id) || 0;
+        const simB = similarityMap.get(b.id) || 0;
+        return simB - simA;
+      });
+
+      console.log('[Semantic Search] Setting matched notes:', sortedMatchedNotes.length);
+      setSemanticMatchedNotes(sortedMatchedNotes);
+
+    } catch (error) {
+      console.error('Semantic search failed:', error);
+      Alert.alert('Error', 'Failed to perform semantic search');
+    } finally {
+      setIsSearchingSemantic(false);
+    }
+  };
+
+  const handleToggleSemantic = useCallback((value: boolean) => {
+    setIsSemanticSearch(value);
+    // Clear results when switching modes
+    setSemanticResults([]);
+    setSubmittedQuery('');
+    // Optional: Auto-trigger search if query exists? 
+    // User requested "then they hit the button", so let's NOT auto-trigger.
   }, []);
 
   const handleSortChange = useCallback((option: SortOption) => {
@@ -128,6 +250,37 @@ export default function NotesScreen() {
       setIsRefreshing(false);
     }
   }, []);
+
+  // Render semantic result card
+  const renderSemanticResult = useCallback(({ item }: { item: SemanticSearchResult }) => {
+    const cardWidth = 100 / numColumns;
+    // Find the original note to get the title if possible, or just show snippet
+    const originalNote = notes.find(n => n.id === item.note_id);
+
+    return (
+      <View
+        className="px-3 mb-4"
+        style={{ width: `${cardWidth}%` }}
+      >
+        <View className="bg-gray-900 rounded-xl p-4 border border-blue-900/50 h-44">
+          <Text className="text-blue-400 font-bold text-lg mb-2" numberOfLines={1}>
+            {originalNote?.title || 'Note Fragment'}
+          </Text>
+          <Text className="text-gray-300 text-sm leading-5" numberOfLines={4}>
+            {item.content}
+          </Text>
+          <View className="mt-auto flex-row justify-between items-center">
+            <Text className="text-gray-500 text-xs">
+              Match: {Math.round(item.similarity * 100)}%
+            </Text>
+            <Text className="text-gray-600 text-xs">
+              Part {item.chunk_index + 1}/{item.total_chunks}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }, [numColumns, notes]);
 
   // Render skeleton loading cards
   const renderSkeletonCards = () => {
@@ -222,12 +375,21 @@ export default function NotesScreen() {
         {/* Header with title and New Note button */}
         <NotesHeader onNewNote={handleCreateNote} />
 
-        {/* Search bar */}
+        <View className="mb-4 flex-row items-center space-x-2">
+          <View className="flex-1">
+            <SearchBar
+              value={searchQuery}
+              onChangeText={handleSearchChange}
+              onSearch={handleSearchSubmit}
+              placeholder={isSemanticSearch ? "Search by meaning..." : "Search notes..."}
+            />
+          </View>
+        </View>
+
         <View className="mb-4">
-          <SearchBar
-            value={searchQuery}
-            onChangeText={handleSearchChange}
-            placeholder="Search notes..."
+          <SemanticSearchToggle
+            isSemantic={isSemanticSearch}
+            onToggle={handleToggleSemantic}
           />
         </View>
 
@@ -238,9 +400,9 @@ export default function NotesScreen() {
 
         {/* Notes grid with responsive column layout */}
         <FlatList
-          data={displayedNotes}
+          data={isSemanticSearch ? semanticMatchedNotes : displayedNotes}
           renderItem={renderNoteCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item: any) => item.id}
           key={`grid-${numColumns}`}
           numColumns={numColumns}
           columnWrapperStyle={{ marginHorizontal: -12 }}
