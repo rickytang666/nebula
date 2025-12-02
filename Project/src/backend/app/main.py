@@ -30,6 +30,7 @@ app.include_router(notes.router)
 app.include_router(users.router)
 app.include_router(profiles.router)
 app.include_router(ai.router)
+app.include_router(embeddings.router)
 
 @app.get("/")
 def root():
