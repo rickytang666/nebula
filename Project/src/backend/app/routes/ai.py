@@ -7,9 +7,6 @@ from app.core.auth import get_current_user
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
-# Specify model name:
-model_name = "gemini-2.0-flash"
-
 # 1. Configure the AI with your Key
 api_key = os.environ.get("GEMINI_API_KEY")
 if api_key:
@@ -30,14 +27,15 @@ class AIProcessResponse(BaseModel):
 # 4. The actual route handler
 @router.post("/process", response_model=AIProcessResponse)
 async def process_ai_request(
-    request: AIProcessRequest # Security Check!
+    request: AIProcessRequest,
+    #current_user: dict = Depends(get_current_user) # Security Check!
 ):
     if not api_key:
         raise HTTPException(status_code=503, detail="Server missing API Key")
 
     try:
         # Use the 'flash' model for speed and low cost
-        model = genai.GenerativeModel(model_name)
+        model = genai.GenerativeModel('gemini-2.5-flash')
 
         # Build the context for the AI
         prompt = f"""
@@ -56,12 +54,12 @@ async def process_ai_request(
         response = model.generate_content(prompt)
         
         if not response.text:
-             raise ValueError("Empty response from AI")
+            raise ValueError("Empty response from AI")
 
         return AIProcessResponse(
             result=response.text,
             processedAt=datetime.utcnow().isoformat(),
-            modelUsed=model_name
+            modelUsed='gemini-2.5-flash'
         )
 
     except Exception as e:
