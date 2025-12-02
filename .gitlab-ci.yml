@@ -15,17 +15,16 @@ variables:
 build:
   stage: build
   image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-  services:
-    - docker:24-dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    - echo "nameserver 8.8.4.4" >> /etc/resolv.conf
   script:
+    - apk add --no-cache docker
     - echo "$GCLOUD_SERVICE_KEY" | base64 -d > /tmp/key.json
     - gcloud auth activate-service-account --key-file=/tmp/key.json
     - gcloud config set project $PROJECT_ID
     - gcloud auth configure-docker $REGION-docker.pkg.dev
-    - docker build -t $IMAGE:$CI_COMMIT_SHA -f src/backend/Dockerfile src/backend
+    - docker build --platform linux/amd64 -t $IMAGE:$CI_COMMIT_SHA -f Project/src/backend/Dockerfile Project/src/backend
     - docker push $IMAGE:$CI_COMMIT_SHA
   except:
     - schedules
@@ -36,14 +35,13 @@ build:
 deploy:
   stage: deploy
   image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  before_script:
+    - echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    - echo "nameserver 8.8.4.4" >> /etc/resolv.conf
   script:
     - echo "$GCLOUD_SERVICE_KEY" | base64 -d > /tmp/key.json
     - gcloud auth activate-service-account --key-file=/tmp/key.json
     - gcloud config set project $PROJECT_ID
-    - gcloud run deploy $SERVICE_NAME \
-        --image $IMAGE:$CI_COMMIT_SHA \
-        --platform managed \
-        --region $REGION \
-        --allow-unauthenticated
+    - gcloud run deploy $SERVICE_NAME --image $IMAGE:$CI_COMMIT_SHA --platform managed --region $REGION --allow-unauthenticated
   only:
     - issue-#11-notes-app

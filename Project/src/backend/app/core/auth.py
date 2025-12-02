@@ -66,3 +66,15 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+
+async def get_authenticated_client(
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+) -> Client:
+    """
+    Get a Supabase client authenticated as the current user.
+    This ensures RLS policies are applied correctly.
+    """
+    token = credentials.credentials
+    client = get_supabase()
+    client.postgrest.auth(token)
+    return client

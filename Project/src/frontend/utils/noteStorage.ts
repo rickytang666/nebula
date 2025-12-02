@@ -1,35 +1,21 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Note } from '../types/note';
-import { SAMPLE_NOTES } from '../data/sampleNotes';
-
-const NOTES_STORAGE_KEY = 'notes_storage';
+import { api } from '../services/api';
 
 /**
- * Initialize notes storage with sample data if empty
+ * Initialize notes storage
+ * No longer needed for API, but kept for compatibility if needed.
  */
 export async function initializeNotes(): Promise<Note[]> {
-  try {
-    const stored = await AsyncStorage.getItem(NOTES_STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored);
-    } else {
-      // First time - save sample notes
-      await AsyncStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(SAMPLE_NOTES));
-      return SAMPLE_NOTES;
-    }
-  } catch (error) {
-    console.error('Error initializing notes:', error);
-    return SAMPLE_NOTES;
-  }
+  return getAllNotes();
 }
 
 /**
- * Get all notes from storage
+ * Get all notes from API
  */
 export async function getAllNotes(): Promise<Note[]> {
   try {
-    const stored = await AsyncStorage.getItem(NOTES_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const notes = await api.notes.list();
+    return notes;
   } catch (error) {
     console.error('Error getting notes:', error);
     return [];
@@ -41,8 +27,8 @@ export async function getAllNotes(): Promise<Note[]> {
  */
 export async function getNoteById(id: string): Promise<Note | null> {
   try {
-    const notes = await getAllNotes();
-    return notes.find(note => note.id === id) || null;
+    const note = await api.notes.get(id);
+    return note;
   } catch (error) {
     console.error('Error getting note:', error);
     return null;
@@ -52,20 +38,32 @@ export async function getNoteById(id: string): Promise<Note | null> {
 /**
  * Save or update a note
  */
-export async function saveNote(note: Note): Promise<void> {
+export async function saveNote(note: Note): Promise<Note> {
   try {
-    const notes = await getAllNotes();
-    const index = notes.findIndex(n => n.id === note.id);
-    
-    if (index >= 0) {
-      // Update existing note
-      notes[index] = note;
+    // Check if note exists (by ID format or by trying to get it)
+    // For simplicity, if it has a numeric/UUID-like ID it might be existing.
+    // However, the frontend generates a timestamp ID for new notes: Date.now().toString()
+    // The backend uses UUIDs.
+    // So if the ID is a timestamp (numeric), it's a new note for the backend.
+    // If it's a UUID, it's an existing note.
+
+    const isNewNote = !note.id || !note.id.includes('-'); // UUIDs have dashes, Date.now() doesn't
+
+    if (isNewNote) {
+      const newNote = await api.notes.create({
+        title: note.title,
+        content: note.content,
+        basic_stats: (note as any).basic_stats
+      });
+      return newNote;
     } else {
-      // Add new note
-      notes.unshift(note); // Add to beginning
+      const updatedNote = await api.notes.update(note.id, {
+        title: note.title,
+        content: note.content,
+        basic_stats: (note as any).basic_stats
+      });
+      return updatedNote;
     }
-    
-    await AsyncStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
   } catch (error) {
     console.error('Error saving note:', error);
     throw error;
@@ -77,9 +75,13 @@ export async function saveNote(note: Note): Promise<void> {
  */
 export async function deleteNote(id: string): Promise<void> {
   try {
-    const notes = await getAllNotes();
-    const filtered = notes.filter(note => note.id !== id);
-    await AsyncStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(filtered));
+    // If ID is not a UUID (e.g. timestamp for new unsaved note), don't call API
+    if (id && !id.includes('-')) {
+      console.log('Deleting local-only note (not synced to backend):', id);
+      return;
+    }
+
+    await api.notes.delete(id);
   } catch (error) {
     console.error('Error deleting note:', error);
     throw error;
@@ -87,13 +89,9 @@ export async function deleteNote(id: string): Promise<void> {
 }
 
 /**
- * Clear all notes (for testing)
+ * Clear all notes
+ * Not implemented for API to avoid accidental data loss
  */
 export async function clearAllNotes(): Promise<void> {
-  try {
-    await AsyncStorage.removeItem(NOTES_STORAGE_KEY);
-  } catch (error) {
-    console.error('Error clearing notes:', error);
-    throw error;
-  }
+  console.warn('clearAllNotes not implemented for API storage');
 }

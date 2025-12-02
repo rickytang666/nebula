@@ -1,7 +1,8 @@
 import { useRouter } from "expo-router";
-import { 
-  Box, 
-  VStack, 
+import { useEffect } from "react";
+import {
+  Box,
+  VStack,
   HStack,
   Center,
   Heading,
@@ -11,8 +12,21 @@ import {
 } from "@/components/ui";
 import { StatusBar } from 'expo-status-bar';
 
+import { useAuth } from "@/contexts/AuthContext";
+import { Redirect } from "expo-router";
+
 export default function LandingPage() {
   const router = useRouter();
+  const { session, loading } = useAuth();
+
+  if (!loading && session) {
+    return <Redirect href="/(app)/(tabs)/notes" />;
+  }
+
+  useEffect(() => {
+    console.log("[Landing Page] MOUNTED");
+    return () => console.log("[Landing Page] UNMOUNTED");
+  }, []);
 
   return (
     <Box className="flex-1 bg-black">
@@ -24,11 +38,11 @@ export default function LandingPage() {
             <Box className="w-24 h-24 rounded-full bg-white items-center justify-center mb-6">
               <Text className="text-6xl">📝</Text>
             </Box>
-            
+
             <Heading size="3xl" className="text-white text-center mb-2">
               Notes
             </Heading>
-            
+
             <Text size="lg" className="text-gray-400 text-center">
               Simple. Clean. Organized.
             </Text>
@@ -36,16 +50,16 @@ export default function LandingPage() {
 
           {/* Features */}
           <VStack space="md" className="w-full">
-            <FeatureItem 
-              icon="✓" 
+            <FeatureItem
+              icon="✓"
               text="Minimalist note-taking"
             />
-            <FeatureItem 
-              icon="📁" 
+            <FeatureItem
+              icon="📁"
               text="Organize with ease"
             />
-            <FeatureItem 
-              icon="🔒" 
+            <FeatureItem
+              icon="🔒"
               text="Secure and private"
             />
           </VStack>
@@ -55,7 +69,7 @@ export default function LandingPage() {
             <Button
               size="xl"
               className="w-full bg-white rounded-xl"
-              onPress={() => router.push("/(auth)/login")}
+              onPress={() => router.push("/login")}
             >
               <ButtonText className="text-black font-semibold text-lg">
                 Sign In
@@ -66,7 +80,7 @@ export default function LandingPage() {
               size="xl"
               variant="outline"
               className="w-full border-2 border-white rounded-xl"
-              onPress={() => router.push("/(auth)/signup")}
+              onPress={() => router.push("/signup")}
             >
               <ButtonText className="text-white font-semibold text-lg">
                 Create Account

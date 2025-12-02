@@ -7,7 +7,6 @@ export interface Note {
   content: string;
   created_at: string; // ISO 8601 format
   updated_at: string; // ISO 8601 format
-  tags: string[];
   user_id?: string; // For future multi-user support
 }
 
