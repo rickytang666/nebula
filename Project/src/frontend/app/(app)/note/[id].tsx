@@ -23,7 +23,8 @@ import { getNoteById, saveNote as saveNoteToStorage, deleteNote as deleteNoteFro
 
 export default function NoteDetailScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const localParams = useLocalSearchParams<{ id: string; initialContent?: string }>();
+  const { id } = localParams;
   const { width } = useWindowDimensions();
 
   // Calculate responsive padding and max width
@@ -51,16 +52,20 @@ export default function NoteDetailScreen() {
     const loadNote = async () => {
       if (id === 'new') {
         // Handle new note creation - start in edit mode
+
+        // Check for initialContent from OCR
+        const contentToUse = localParams.initialContent || '';
+
         const newNote: Note = {
           id: Date.now().toString(),
           title: '',
-          content: '',
+          content: contentToUse,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
         setNote(newNote);
         setTitle('');
-        setContent('');
+        setContent(contentToUse);
         setIsEditMode(true); // Auto-enable edit mode for new notes
       } else {
         // Try to load from local storage first

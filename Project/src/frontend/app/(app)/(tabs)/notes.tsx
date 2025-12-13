@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '@/contexts/AuthContext';
 import SemanticSearchToggle from '@/components/SemanticSearchToggle';
 import { api } from '@/services/api';
@@ -23,6 +24,13 @@ import SortControls from '@/components/SortControls';
 import NoteCard from '@/components/NoteCard';
 import NoteCardSkeleton from '@/components/NoteCardSkeleton';
 import { Note, SortOption, SemanticSearchResult } from '@/types/note';
+
+const LOCAL_API_URL = 'https://localhost:8000';
+const PROD_API_URL = process.env.EXPO_PUBLIC_API_URL;
+const DEV_API_URL = process.env.EXPO_PUBLIC_DEV_API_URL;
+const __DEV__ = process.env.EXPO_PUBLIC__DEV__;
+
+const API_URL = __DEV__ ? (DEV_API_URL || LOCAL_API_URL) : (PROD_API_URL || LOCAL_API_URL);
 
 export default function NotesScreen() {
   const router = useRouter();
@@ -235,6 +243,115 @@ export default function NotesScreen() {
     router.push('/(app)/note/new' as any);
   };
 
+  const handleScanPress = useCallback(() => {
+    Alert.alert(
+      'Scan Note',
+      'Choose an option to import a note',
+      [
+        {
+          text: 'Take Photo',
+          onPress: () => processImage(true),
+        },
+        {
+          text: 'Choose from Library',
+          onPress: () => processImage(false),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]
+    );
+  }, []);
+
+  const processImage = async (useCamera: boolean) => {
+    try {
+      setIsLoading(true); // Show loading indicator
+
+      let result;
+      if (useCamera) {
+        const permission = await ImagePicker.requestCameraPermissionsAsync();
+        if (!permission.granted) {
+          Alert.alert('Permission needed', 'Camera permission is required to take photos.');
+          setIsLoading(false);
+          return;
+        }
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality: 0.8,
+          base64: false, // We'll let file upload handle it or read it if needed? API expects file.
+        });
+      } else {
+        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permission.granted) {
+          Alert.alert('Permission needed', 'Library permission is required to select photos.');
+          setIsLoading(false);
+          return;
+        }
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality: 0.8,
+        });
+      }
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+
+        // Upload to backend
+        const formData = new FormData();
+        const uri = asset.uri;
+        const filename = uri.split('/').pop() || 'photo.jpg';
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : `image`;
+
+        // React Native FormData expects an object with uri, name, type
+        formData.append('file', {
+          uri: uri,
+          name: filename,
+          type: type,
+        } as any);
+
+        console.log('Sending image to OCR service...');
+        // Note: You need to implement api.ocr.extract(formData)
+        // Since api.ocr might not exist yet in your generated api wrapper, 
+        // we'll assume a direct fetch or extending the api service.
+        // For now, let's try to assume api.ocr exists or fetch directly.
+
+        // Ideally: const response = await api.ocr.extract(formData);
+        // Direct fetch backup;
+        console.log('Using API URL for OCR:', API_URL);
+        console.log('Full Endpoint:', `${API_URL}/ocr/extract`);
+
+        const response = await fetch(`${API_URL}/ocr/extract`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            // 'Content-Type': 'multipart/form-data', // Let fetch set this automatically for FormData
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`OCR failed with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const markdown = data.markdown;
+
+        if (markdown) {
+          router.push({
+            pathname: '/(app)/note/new',
+            params: { initialContent: markdown }
+          } as any);
+        }
+      }
+    } catch (error) {
+      console.error('Scan error:', error);
+      Alert.alert('Scan Failed', 'Could not extract text from image.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
@@ -373,7 +490,7 @@ export default function NotesScreen() {
 
       <View className="flex-1 pt-4" style={{ paddingHorizontal: horizontalPadding }}>
         {/* Header with title and New Note button */}
-        <NotesHeader onNewNote={handleCreateNote} />
+        <NotesHeader onNewNote={handleCreateNote} onScan={handleScanPress} />
 
         <View className="mb-4 flex-row items-center space-x-2">
           <View className="flex-1">
