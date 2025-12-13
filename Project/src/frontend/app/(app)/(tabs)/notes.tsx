@@ -25,12 +25,7 @@ import NoteCard from '@/components/NoteCard';
 import NoteCardSkeleton from '@/components/NoteCardSkeleton';
 import { Note, SortOption, SemanticSearchResult } from '@/types/note';
 
-const LOCAL_API_URL = 'https://localhost:8000';
-const PROD_API_URL = process.env.EXPO_PUBLIC_API_URL;
-const DEV_API_URL = process.env.EXPO_PUBLIC_DEV_API_URL;
-const __DEV__ = process.env.EXPO_PUBLIC__DEV__;
-
-const API_URL = __DEV__ ? (DEV_API_URL || LOCAL_API_URL) : (PROD_API_URL || LOCAL_API_URL);
+import { API_URL } from '@/constants/env';
 
 export default function NotesScreen() {
   const router = useRouter();
