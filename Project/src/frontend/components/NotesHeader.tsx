@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface NotesHeaderProps {
@@ -8,6 +8,26 @@ interface NotesHeaderProps {
 }
 
 export default function NotesHeader({ onNewNote, onScan }: NotesHeaderProps) {
+  const handleCreatePress = () => {
+    Alert.alert(
+      'Create Note',
+      'Choose how you want to create a note',
+      [
+        {
+          text: 'New Note',
+          onPress: onNewNote,
+        },
+        {
+          text: 'Scan Image',
+          onPress: onScan,
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]
+    );
+  };
 
   return (
     <View className="flex-row items-center justify-between mb-6">
@@ -15,45 +35,24 @@ export default function NotesHeader({ onNewNote, onScan }: NotesHeaderProps) {
         Notes
       </Text>
 
-      <View className="flex-row gap-2">
-        <Pressable
-          className="bg-gray-800 rounded-xl flex-row items-center justify-center border border-gray-700"
-          style={{ minHeight: 44, width: 44 }}
-          onPress={onScan}
-          android_ripple={{ color: 'rgba(255, 255, 255, 0.2)' }}
-          accessibilityLabel="Scan note"
-          accessibilityRole="button"
-          accessibilityHint="Take a photo or select image to scan text"
-        >
-          {({ pressed }) => (
-            <Ionicons
-              name="scan"
-              size={20}
-              color={pressed ? "#9CA3AF" : "white"}
-              style={{ opacity: pressed ? 0.8 : 1 }}
-            />
-          )}
-        </Pressable>
-
-        <Pressable
-          className="bg-blue-600 rounded-xl px-4 flex-row items-center"
-          style={{ minHeight: 44 }}
-          onPress={onNewNote}
-          android_ripple={{ color: 'rgba(255, 255, 255, 0.2)' }}
-          accessibilityLabel="Create new note"
-          accessibilityRole="button"
-          accessibilityHint="Opens a new note for editing"
-        >
-          {({ pressed }) => (
-            <View style={{ opacity: pressed ? 0.8 : 1 }} className="flex-row items-center">
-              <Ionicons name="add" size={20} color="white" />
-              <Text className="text-white font-semibold ml-1">
-                New Note
-              </Text>
-            </View>
-          )}
-        </Pressable>
-      </View>
+      <Pressable
+        className="bg-blue-500 rounded-xl px-4 flex-row items-center"
+        style={{ minHeight: 44 }}
+        onPress={handleCreatePress}
+        android_ripple={{ color: 'rgba(255, 255, 255, 0.2)' }}
+        accessibilityLabel="Create note"
+        accessibilityRole="button"
+        accessibilityHint="Choose to create a new note or scan an image"
+      >
+        {({ pressed }) => (
+          <View style={{ opacity: pressed ? 0.8 : 1 }} className="flex-row items-center">
+            <Ionicons name="add" size={20} color="white" />
+            <Text className="text-white font-semibold ml-1">
+              Create
+            </Text>
+          </View>
+        )}
+      </Pressable>
     </View>
   );
 }

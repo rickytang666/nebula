@@ -7,9 +7,18 @@ interface SearchBarProps {
   onChangeText: (text: string) => void;
   onSearch?: () => void;
   placeholder?: string;
+  isSemantic?: boolean;
+  onToggleSemantic?: (value: boolean) => void;
 }
 
-export default function SearchBar({ value, onChangeText, onSearch, placeholder = 'Search notes...' }: SearchBarProps) {
+export default function SearchBar({
+  value,
+  onChangeText,
+  onSearch,
+  placeholder = 'Search notes...',
+  isSemantic = false,
+  onToggleSemantic
+}: SearchBarProps) {
   const handleClear = () => {
     onChangeText('');
   };
@@ -30,6 +39,22 @@ export default function SearchBar({ value, onChangeText, onSearch, placeholder =
         accessibilityLabel="Search notes"
         accessibilityHint="Type to search notes by title"
       />
+      {onToggleSemantic && (
+        <Pressable
+          onPress={() => onToggleSemantic(!isSemantic)}
+          hitSlop={8}
+          className="ml-2"
+          accessibilityRole="switch"
+          accessibilityLabel={`Switch to ${isSemantic ? 'keyword' : 'semantic'} search`}
+          accessibilityState={{ checked: isSemantic }}
+        >
+          <Ionicons
+            name={isSemantic ? "sparkles" : "sparkles-outline"}
+            size={20}
+            color={isSemantic ? "#60A5FA" : "#6B7280"}
+          />
+        </Pressable>
+      )}
       {value.length > 0 && (
         <Pressable
           onPress={handleClear}

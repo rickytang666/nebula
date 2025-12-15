@@ -15,11 +15,49 @@ module.exports = {
       pattern:
         /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background|indicator)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark|primary)/,
     },
+    {
+      pattern:
+        /(bg|border|text|stroke|fill)-(base|accent|neutral)-(100|200|300|content)/,
+    },
+    {
+      pattern:
+        /(bg|border|text|stroke|fill)-(primary|secondary|accent|neutral|info|success|warning|error)(-content)?/,
+    },
+    {
+      pattern:
+        /rounded-(selector|field|box)/,
+    },
   ],
   theme: {
     extend: {
       colors: {
-        primary: {
+        // icefox Base Colors
+        base: {
+          100: 'var(--color-base-100)',
+          200: 'var(--color-base-200)',
+          300: 'var(--color-base-300)',
+          content: 'var(--color-base-content)',
+        },
+        // icefox Brand Colors (overriding existing primary/secondary)
+        primary: 'var(--color-primary)',
+        'primary-content': 'var(--color-primary-content)',
+        secondary: 'var(--color-secondary)',
+        'secondary-content': 'var(--color-secondary-content)',
+        accent: 'var(--color-accent)',
+        'accent-content': 'var(--color-accent-content)',
+        neutral: 'var(--color-neutral)',
+        'neutral-content': 'var(--color-neutral-content)',
+        // icefox Semantic Colors (overriding existing semantic colors)
+        info: 'var(--color-info)',
+        'info-content': 'var(--color-info-content)',
+        success: 'var(--color-success)',
+        'success-content': 'var(--color-success-content)',
+        warning: 'var(--color-warning)',
+        'warning-content': 'var(--color-warning-content)',
+        error: 'var(--color-error)',
+        'error-content': 'var(--color-error-content)',
+        // Legacy colors (keeping for backward compatibility)
+        'primary-legacy': {
           0: 'rgb(var(--color-primary-0)/<alpha-value>)',
           50: 'rgb(var(--color-primary-50)/<alpha-value>)',
           100: 'rgb(var(--color-primary-100)/<alpha-value>)',
@@ -33,7 +71,7 @@ module.exports = {
           900: 'rgb(var(--color-primary-900)/<alpha-value>)',
           950: 'rgb(var(--color-primary-950)/<alpha-value>)',
         },
-        secondary: {
+        'secondary-legacy': {
           0: 'rgb(var(--color-secondary-0)/<alpha-value>)',
           50: 'rgb(var(--color-secondary-50)/<alpha-value>)',
           100: 'rgb(var(--color-secondary-100)/<alpha-value>)',
@@ -60,7 +98,7 @@ module.exports = {
           900: 'rgb(var(--color-tertiary-900)/<alpha-value>)',
           950: 'rgb(var(--color-tertiary-950)/<alpha-value>)',
         },
-        error: {
+        'error-legacy': {
           0: 'rgb(var(--color-error-0)/<alpha-value>)',
           50: 'rgb(var(--color-error-50)/<alpha-value>)',
           100: 'rgb(var(--color-error-100)/<alpha-value>)',
@@ -74,7 +112,7 @@ module.exports = {
           900: 'rgb(var(--color-error-900)/<alpha-value>)',
           950: 'rgb(var(--color-error-950)/<alpha-value>)',
         },
-        success: {
+        'success-legacy': {
           0: 'rgb(var(--color-success-0)/<alpha-value>)',
           50: 'rgb(var(--color-success-50)/<alpha-value>)',
           100: 'rgb(var(--color-success-100)/<alpha-value>)',
@@ -88,7 +126,7 @@ module.exports = {
           900: 'rgb(var(--color-success-900)/<alpha-value>)',
           950: 'rgb(var(--color-success-950)/<alpha-value>)',
         },
-        warning: {
+        'warning-legacy': {
           0: 'rgb(var(--color-warning-0)/<alpha-value>)',
           50: 'rgb(var(--color-warning-50)/<alpha-value>)',
           100: 'rgb(var(--color-warning-100)/<alpha-value>)',
@@ -102,7 +140,7 @@ module.exports = {
           900: 'rgb(var(--color-warning-900)/<alpha-value>)',
           950: 'rgb(var(--color-warning-950)/<alpha-value>)',
         },
-        info: {
+        'info-legacy': {
           0: 'rgb(var(--color-info-0)/<alpha-value>)',
           50: 'rgb(var(--color-info-50)/<alpha-value>)',
           100: 'rgb(var(--color-info-100)/<alpha-value>)',
@@ -189,6 +227,11 @@ module.exports = {
       },
       fontSize: {
         '2xs': '10px',
+      },
+      borderRadius: {
+        selector: 'var(--radius-selector)',
+        field: 'var(--radius-field)',
+        box: 'var(--radius-box)',
       },
       boxShadow: {
         'hard-1': '-2px 2px 8px 0px rgba(38, 38, 38, 0.20)',
