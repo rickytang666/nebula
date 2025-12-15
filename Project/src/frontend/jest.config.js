@@ -11,6 +11,7 @@ module.exports = {
   },
   testMatch: ['**/*.test.ts', '**/*.test.tsx'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   collectCoverageFrom: [
     'utils/**/*.{ts,tsx}',
     '!**/__tests__/**',

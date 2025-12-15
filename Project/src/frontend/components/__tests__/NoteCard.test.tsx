@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react-native';
 import NoteCard from '../NoteCard';
 import { Note } from '../../types/note';
 
@@ -50,7 +50,7 @@ const mockNote: Note = {
 
 describe('NoteCard', () => {
     it('renders correctly', () => {
-        const tree = renderer.create(
+        const tree = render(
             <NoteCard note={mockNote} onPress={jest.fn()} />
         ).toJSON();
         expect(tree).toMatchSnapshot();
