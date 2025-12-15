@@ -14,6 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { useAuth } from "@/contexts/AuthContext";
 import { Redirect } from "expo-router";
+import NebulaLogo from "@/components/NebulaLogo";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -35,12 +36,12 @@ export default function LandingPage() {
         <VStack space="4xl" className="w-full max-w-md items-center">
           {/* Logo/Icon Area */}
           <Box className="items-center">
-            <Box className="w-24 h-24 rounded-full bg-white items-center justify-center mb-6">
-              <Text className="text-6xl">📝</Text>
+            <Box className="mb-6">
+              <NebulaLogo size={150} />
             </Box>
 
             <Heading size="3xl" className="text-white text-center mb-2">
-              Notes
+              Nebula
             </Heading>
 
             <Text size="lg" className="text-gray-400 text-center">
