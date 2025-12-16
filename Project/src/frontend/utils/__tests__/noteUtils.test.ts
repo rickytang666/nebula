@@ -9,7 +9,6 @@ const mockNotes: Note[] = [
     content: 'Important meeting',
     created_at: '2024-11-01T10:00:00Z',
     updated_at: '2024-11-01T10:00:00Z',
-    tags: ['work']
   },
   {
     id: '2',
@@ -17,7 +16,6 @@ const mockNotes: Note[] = [
     content: 'Buy groceries',
     created_at: '2024-11-05T14:00:00Z',
     updated_at: '2024-11-05T14:00:00Z',
-    tags: ['personal']
   },
   {
     id: '3',
@@ -25,7 +23,6 @@ const mockNotes: Note[] = [
     content: 'New project concepts',
     created_at: '2024-11-03T09:00:00Z',
     updated_at: '2024-11-03T09:00:00Z',
-    tags: ['work']
   }
 ];
 

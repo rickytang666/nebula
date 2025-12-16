@@ -12,3 +12,22 @@ Project/extrafiles/
 # Ignore Google Cloud service account keys
 key.json
 key.b64
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.spec
+
+# Testing/Coverage
+coverage/
+*.lcov
+test-report.xml

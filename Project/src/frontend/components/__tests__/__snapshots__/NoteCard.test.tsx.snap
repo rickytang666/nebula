@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`NoteCard renders correctly 1`] = `
+<Animated.View
+  style={
+    {
+      "opacity": {
+        "interpolate": [MockFunction],
+      },
+      "transform": [
+        {
+          "scale": {
+            "interpolate": [MockFunction],
+          },
+        },
+      ],
+    }
+  }
+>
+  <Pressable
+    accessibilityHint="Opens note. Last updated 1 year ago."
+    accessibilityLabel="Note: Test Note"
+    accessibilityRole="button"
+    android_ripple={
+      {
+        "color": "rgba(255, 255, 255, 0.1)",
+      }
+    }
+    className="bg-gray-900 rounded-3xl p-4 border border-gray-800"
+    onPress={[Function]}
+    style={
+      {
+        "minHeight": 160,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        accessibilityRole="header"
+        className="text-white font-semibold text-lg mb-2"
+        ellipsizeMode="tail"
+        numberOfLines={2}
+      >
+        Test Note
+      </Text>
+      <Text
+        className="text-gray-400 text-sm mb-3"
+        ellipsizeMode="tail"
+        numberOfLines={3}
+      >
+        This is a test note content.
+      </Text>
+      <Text
+        className="text-gray-500 text-xs mb-2"
+      >
+        1 year ago
+      </Text>
+    </View>
+  </Pressable>
+</Animated.View>
+`;

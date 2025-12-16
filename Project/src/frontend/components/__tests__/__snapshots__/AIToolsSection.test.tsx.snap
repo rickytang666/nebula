@@ -1,0 +1,180 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AIToolsSection renders correctly 1`] = `
+<Animated.View
+  className="bg-black"
+  style={
+    {
+      "flex": 1,
+      "opacity": {
+        "interpolate": [MockFunction],
+      },
+      "transform": [
+        {
+          "translateX": {
+            "interpolate": [MockFunction],
+          },
+        },
+      ],
+    }
+  }
+>
+  <View
+    className="flex-row items-center justify-between py-4 border-b border-gray-800 bg-gray-950"
+    style={
+      {
+        "paddingHorizontal": 16,
+      }
+    }
+  >
+    <View
+      className="flex-row items-center"
+    >
+      <Ionicons
+        color="#3B82F6"
+        name="sparkles"
+        size={24}
+      />
+      <Text
+        className="text-white text-lg font-semibold ml-2"
+      >
+        AI Assistant
+      </Text>
+    </View>
+    <TouchableOpacity
+      className="p-2"
+      onPress={[MockFunction]}
+    >
+      <Ionicons
+        color="#FFFFFF"
+        name="close"
+        size={24}
+      />
+    </TouchableOpacity>
+  </View>
+  <View
+    className="flex-1 flex-col"
+  >
+    <ScrollView
+      className="flex-1 bg-black"
+      contentContainerStyle={
+        {
+          "paddingBottom": 16,
+          "paddingHorizontal": 16,
+          "paddingTop": 16,
+        }
+      }
+      ref={
+        {
+          "current": null,
+        }
+      }
+    >
+      <View
+        className="flex-1 items-center justify-center py-12"
+      >
+        <Ionicons
+          color="#6B7280"
+          name="sparkles-outline"
+          size={48}
+        />
+        <Text
+          className="text-gray-400 text-center mt-4"
+        >
+          Ask Gemini about your note
+        </Text>
+      </View>
+    </ScrollView>
+    <KeyboardAvoidingView
+      behavior="padding"
+      className="border-t border-gray-800 bg-gray-950"
+      keyboardVerticalOffset={120}
+    >
+      <View
+        className="p-4"
+        style={
+          {
+            "paddingHorizontal": 16,
+          }
+        }
+      >
+        <ScrollView
+          className="mb-3 -mx-4 px-4"
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <TouchableOpacity
+            className="bg-gray-800 rounded-full px-3 py-2 mr-2 flex-row items-center"
+            onPress={[Function]}
+          >
+            <Ionicons
+              color="#3B82F6"
+              name="list"
+              size={16}
+            />
+            <Text
+              className="text-white text-xs ml-1 font-medium"
+            >
+              Summarize
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-gray-800 rounded-full px-3 py-2 mr-2 flex-row items-center"
+            onPress={[Function]}
+          >
+            <Ionicons
+              color="#3B82F6"
+              name="bulb"
+              size={16}
+            />
+            <Text
+              className="text-white text-xs ml-1 font-medium"
+            >
+              Ideas
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-gray-800 rounded-full px-3 py-2 mr-2 flex-row items-center"
+            onPress={[Function]}
+          >
+            <Ionicons
+              color="#3B82F6"
+              name="checkmark-done"
+              size={16}
+            />
+            <Text
+              className="text-white text-xs ml-1 font-medium"
+            >
+              Polish
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+        <View
+          className="bg-gray-900 rounded-lg border border-gray-800 flex-row items-center pr-2"
+        >
+          <TextInput
+            className="text-white text-base px-4 py-3 flex-1 min-h-12"
+            editable={true}
+            maxLength={500}
+            multiline={true}
+            onChangeText={[Function]}
+            placeholder="Ask Gemini..."
+            placeholderTextColor="#6B7280"
+            value=""
+          />
+          <TouchableOpacity
+            disabled={true}
+            onPress={[Function]}
+          >
+            <Ionicons
+              color="#4B5563"
+              name="send"
+              size={24}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </KeyboardAvoidingView>
+  </View>
+</Animated.View>
+`;

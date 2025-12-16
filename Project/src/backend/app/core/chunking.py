@@ -149,7 +149,10 @@ class TextChunker:
             current_chunk = chunks[i]
             
             # Extract overlap from end of previous chunk
-            overlap_text = prev_chunk[-self.overlap:] if len(prev_chunk) > self.overlap else prev_chunk
+            if self.overlap > 0:
+                overlap_text = prev_chunk[-self.overlap:] if len(prev_chunk) > self.overlap else prev_chunk
+            else:
+                overlap_text = ""
             
             # Prepend overlap to current chunk
             combined = overlap_text + " " + current_chunk
