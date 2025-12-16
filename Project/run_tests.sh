@@ -32,9 +32,11 @@ export OPENAI_API_KEY=dummy
 # Ensure src/backend is in python path if needed, though conftest handles it
 export PYTHONPATH=$PYTHONPATH:$BACKEND_DIR
 
-# Run pytest with coverage
-# Using --cov=src/backend/app to be explicit
-pytest --cov=src/backend/app tests/backend
+# Run pytest with coverage (quiet mode)
+# -q: quiet
+# --tb=no: turn off traceback printing (failed tests won't show stack traces, just failure status)
+# --disable-warnings: hide warning summary
+pytest -q --tb=no --disable-warnings --cov=src/backend/app tests/backend
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[Backend] Tests Passed!${NC}"
@@ -52,11 +54,14 @@ cd "$FRONTEND_DIR"
 
 if [ ! -d "node_modules" ]; then
     echo "Installing frontend dependencies..."
-    npm install
+    npm install > /dev/null 2>&1
 fi
 
-# Run Jest with coverage, non-interactive
-npm test -- --coverage --watchAll=false
+# Run Jest with coverage, non-interactive, quiet
+# --silent: prevents console.log/error from tests appearing
+# --reporters: minimal reporting
+# 2> /dev/null: hide stderr if desired, but might hide helpful runner errors. Let's stick to --silent.
+npm test -- --coverage --watchAll=false --silent
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[Frontend] Tests Passed!${NC}"

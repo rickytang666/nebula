@@ -2,7 +2,7 @@ import os
 import google.generativeai as genai
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 from app.core.auth import get_current_user
 
 router = APIRouter(prefix="/ai", tags=["ai"])
@@ -58,7 +58,7 @@ async def process_ai_request(
 
         return AIProcessResponse(
             result=response.text,
-            processedAt=datetime.utcnow().isoformat(),
+            processedAt=datetime.now(timezone.utc).isoformat(),
             modelUsed='gemini-2.0-flash'
         )
 
