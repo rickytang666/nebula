@@ -2,27 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fix autofill background and text color for dark theme */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
-  -webkit-text-fill-color: #FFFFFF !important;
-  caret-color: #FFFFFF !important;
+:root {
+  /* Base Colors - RGB Fallbacks */
+  --color-base-100: rgb(252, 252, 252);
+  --color-base-200: rgb(249, 249, 249);
+  --color-base-300: rgb(237, 237, 237);
+  --color-base-content: rgb(50, 50, 50);
+  
+  /* Brand Colors - RGB Fallbacks */
+  --color-primary: rgb(232, 121, 164);
+  --color-primary-content: rgb(82, 28, 48);
+  --color-secondary: rgb(225, 225, 228);
+  --color-secondary-content: rgb(32, 32, 34);
+  --color-accent: rgb(138, 229, 206);
+  --color-accent-content: rgb(48, 82, 75);
+  --color-neutral: rgb(34, 34, 34);
+  --color-neutral-content: rgb(252, 252, 252);
+  
+  /* Semantic Colors - RGB Fallbacks */
+  --color-info: rgb(101, 166, 224);
+  --color-info-content: rgb(244, 247, 251);
+  --color-success: rgb(101, 201, 168);
+  --color-success-content: rgb(244, 251, 248);
+  --color-warning: rgb(229, 186, 92);
+  --color-warning-content: rgb(252, 251, 247);
+  --color-error: rgb(211, 93, 93);
+  --color-error-content: rgb(248, 244, 244);
+  
+  /* Base Colors - OKLCH */
+  --color-base-100: oklch(98% 0.001 106.423);
+  --color-base-200: oklch(97% 0.001 106.424);
+  --color-base-300: oklch(92% 0.003 48.717);
+  --color-base-content: oklch(21% 0.006 56.043);
+  
+  /* Brand Colors - OKLCH */
+  --color-primary: oklch(82% 0.12 346.018);
+  --color-primary-content: oklch(28% 0.109 3.907);
+  --color-secondary: oklch(87% 0.006 286.286);
+  --color-secondary-content: oklch(14% 0.005 285.823);
+  --color-accent: oklch(84% 0.143 164.978);
+  --color-accent-content: oklch(26% 0.051 172.552);
+  --color-neutral: oklch(14% 0.004 49.25);
+  --color-neutral-content: oklch(98% 0.001 106.423);
+  
+  /* Semantic Colors - OKLCH */
+  --color-info: oklch(68% 0.169 237.323);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(69% 0.17 162.48);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(76% 0.188 70.08);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(64% 0.246 16.439);
+  --color-error-content: oklch(96% 0.015 12.422);
+  
+  /* Design Tokens */
+  --radius-selector: 0rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
 }
 
-/* Fix for React Native Web inputs */
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  color: #FFFFFF !important;
-  background-color: #000000 !important;
-}
 
-input[type="text"]:-webkit-autofill,
-input[type="email"]:-webkit-autofill,
-input[type="password"]:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #000000 inset !important;
-  -webkit-text-fill-color: #FFFFFF !important;
-}

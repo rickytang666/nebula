@@ -28,15 +28,13 @@ export default function SortControls({ sortBy, onSortChange }: SortControlsProps
   return (
     <>
       <Pressable
-        className="bg-gray-900 rounded-xl border border-gray-700 px-4 flex-row items-center justify-between"
-        style={{ minHeight: 48 }}
+        className="bg-gray-900 rounded-xl border border-gray-700 items-center justify-center h-12 w-12"
         onPress={() => setIsModalVisible(true)}
         accessibilityLabel={`Sort by ${currentOption?.label}`}
         accessibilityRole="button"
         accessibilityHint="Opens sort options menu"
       >
-        <Text className="text-white text-sm">{currentOption?.label}</Text>
-        <Ionicons name="chevron-down" size={20} color="#9CA3AF" />
+        <Ionicons name="filter" size={20} color="#9CA3AF" />
       </Pressable>
 
       <Modal

@@ -35,7 +35,7 @@ async def process_ai_request(
 
     try:
         # Use the 'flash' model for speed and low cost
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
 
         # Build the context for the AI
         prompt = f"""
@@ -59,7 +59,7 @@ async def process_ai_request(
         return AIProcessResponse(
             result=response.text,
             processedAt=datetime.now(timezone.utc).isoformat(),
-            modelUsed='gemini-2.0-flash'
+            modelUsed='gemini-2.5-flash'
         )
 
     except Exception as e:

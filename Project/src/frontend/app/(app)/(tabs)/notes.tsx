@@ -14,7 +14,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '@/contexts/AuthContext';
-import SemanticSearchToggle from '@/components/SemanticSearchToggle';
 import { api } from '@/services/api';
 import { getAllNotes, initializeNotes, generateEmbeddingsForAllNotes } from '@/utils/noteStorage';
 import { filterNotesBySearch, sortNotes } from '@/utils/noteUtils';
@@ -494,19 +493,10 @@ export default function NotesScreen() {
               onChangeText={handleSearchChange}
               onSearch={handleSearchSubmit}
               placeholder={isSemanticSearch ? "Search by meaning..." : "Search notes..."}
+              isSemantic={isSemanticSearch}
+              onToggleSemantic={handleToggleSemantic}
             />
           </View>
-        </View>
-
-        <View className="mb-4">
-          <SemanticSearchToggle
-            isSemantic={isSemanticSearch}
-            onToggle={handleToggleSemantic}
-          />
-        </View>
-
-        {/* Sort controls */}
-        <View className="mb-4">
           <SortControls sortBy={sortBy} onSortChange={handleSortChange} />
         </View>
 
