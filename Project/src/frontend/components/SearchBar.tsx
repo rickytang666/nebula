@@ -38,6 +38,8 @@ export default function SearchBar({
         placeholderTextColor="#94a3b8"
         accessibilityLabel="Search notes"
         accessibilityHint="Type to search notes by title"
+        textAlignVertical="center"
+        style={{ paddingVertical: 0, height: '100%' }}
       />
       <View className="flex-row items-center gap-2 shrink-0">
         {onToggleSemantic && (

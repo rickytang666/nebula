@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, useColorScheme } from "react-native";
 import { 
   useFonts, 
   Inter_400Regular, 
@@ -8,6 +8,7 @@ import {
   Inter_600SemiBold, 
   Inter_700Bold 
 } from "@expo-google-fonts/inter";
+import { JetBrainsMono_400Regular } from "@expo-google-fonts/jetbrains-mono";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "@/global.css";
@@ -15,11 +16,13 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
 function RootLayoutNav() {
   const { session, loading } = useAuth();
+  const colorScheme = useColorScheme();
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
+    JetBrainsMono_400Regular,
   });
 
   if (!fontsLoaded) {
@@ -31,12 +34,12 @@ function RootLayoutNav() {
   }
 
   return (
-    <GluestackUIProvider mode="dark">
+    <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
       <SafeAreaProvider>
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "#020617" }, // Dark Mode Base (Slate 950)
+            contentStyle: { backgroundColor: colorScheme === "dark" ? "#020617" : "#ffffff" },
             animation: "fade",
           }}
         />
@@ -50,7 +53,7 @@ function RootLayoutNav() {
               bottom: 0,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "rgba(2, 6, 23, 0.9)", // Slate 950 heavily dimmed
+              backgroundColor: colorScheme === "dark" ? "rgba(2, 6, 23, 0.9)" : "rgba(255, 255, 255, 0.9)",
               zIndex: 999,
             }}
           >

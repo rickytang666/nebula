@@ -119,10 +119,12 @@ export default function ProfileScreen() {
                 <TextInput
                   value={fullName}
                   onChangeText={setFullName}
-                  placeholder="Enter your full name"
+                  placeholder="Enter your name"
                   placeholderTextColor="#64748b"
-                  className="bg-base-200 text-base-content pl-12 pr-4 py-3.5 rounded-xl border border-base-300 text-base font-inter focus:border-primary"
+                  className="bg-base-200 border border-base-300 text-base-content rounded-xl px-4 pl-12 py-3.5 text-base font-inter focus:border-primary"
                   autoCapitalize="words"
+                  autoComplete="name"
+                  textAlignVertical="center"
                 />
               </View>
             </View>

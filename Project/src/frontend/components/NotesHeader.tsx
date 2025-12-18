@@ -32,12 +32,12 @@ export default function NotesHeader({ onNewNote, onScan }: NotesHeaderProps) {
 
   return (
     <View className="flex-row items-center justify-between mb-6">
-      <div className="inline-flex items-center">
+      <View className="flex-row items-center">
         <NebulaLogo size={50} />
         <Text className="text-base-content text-3xl font-bold font-inter tracking-tight">
           Nebula
         </Text>
-      </div>
+      </View>
 
       <Pressable
         className="bg-primary rounded-xl px-4 flex-row items-center shadow-lg shadow-blue-900/20"

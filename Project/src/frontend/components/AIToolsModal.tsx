@@ -32,7 +32,7 @@ export const AIToolsModal: React.FC<AIToolsModalProps> = ({
       accessibilityViewIsModal={true}
       accessibilityLabel="AI Tools Modal"
     >
-      <SafeAreaView className="flex-1 bg-black" edges={['top', 'left', 'right', 'bottom']}>
+      <SafeAreaView className="flex-1 bg-base-100" edges={['top', 'left', 'right', 'bottom']}>
         <AIToolsSection
           onClose={onClose}
           noteContent={noteContent}

@@ -487,22 +487,24 @@ export default function NotesScreen() {
     <SafeAreaView className="flex-1 bg-base-100" edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#020617" />
 
-      <View className="flex-1 pt-4" style={{ paddingHorizontal: horizontalPadding }}>
+      <View className="flex-1 pt-4">
         {/* Header with title and New Note button */}
-        <NotesHeader onNewNote={handleCreateNote} onScan={handleScanPress} />
+        <View style={{ paddingHorizontal: horizontalPadding }}>
+          <NotesHeader onNewNote={handleCreateNote} onScan={handleScanPress} />
 
-        <View className="mb-4 flex-row items-center space-x-2">
-          <View className="flex-1">
-            <SearchBar
-              value={searchQuery}
-              onChangeText={handleSearchChange}
-              onSearch={handleSearchSubmit}
-              placeholder={isSemanticSearch ? "Search by meaning..." : "Search notes..."}
-              isSemantic={isSemanticSearch}
-              onToggleSemantic={handleToggleSemantic}
-            />
+          <View className="mb-4 flex-row items-center space-x-2">
+            <View className="flex-1">
+              <SearchBar
+                value={searchQuery}
+                onChangeText={handleSearchChange}
+                onSearch={handleSearchSubmit}
+                placeholder={isSemanticSearch ? "Search by meaning..." : "Search notes..."}
+                isSemantic={isSemanticSearch}
+                onToggleSemantic={handleToggleSemantic}
+              />
+            </View>
+            <SortControls sortBy={sortBy} onSortChange={handleSortChange} />
           </View>
-          <SortControls sortBy={sortBy} onSortChange={handleSortChange} />
         </View>
 
         {/* Notes grid with responsive column layout */}
@@ -517,6 +519,7 @@ export default function NotesScreen() {
           contentContainerStyle={{
             flexGrow: 1,
             paddingBottom: 20,
+            paddingHorizontal: horizontalPadding,
           }}
           ListEmptyComponent={renderEmptyState}
           refreshControl={

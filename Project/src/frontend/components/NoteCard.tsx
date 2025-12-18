@@ -49,36 +49,34 @@ function NoteCard({ note, onPress }: NoteCardProps) {
         android_ripple={{ color: 'rgba(59, 130, 246, 0.1)' }} // Blue 500 ripple
         accessibilityLabel={`Note: ${note.title || 'Untitled Note'}`}
         accessibilityRole="button"
-        accessibilityHint={`Opens note. Last updated ${formattedDate}.`}
+        accessibilityHint={`Opens note. Last updated ${formattedDate}.`} // Updated hint to use formatDate
       >
-        {({ pressed }) => (
-          <View style={{ opacity: pressed ? 0.9 : 1 }}>
-            {/* Title - truncated to 2 lines */}
-            <Text
-              className="text-base-content font-inter font-semibold text-lg mb-2 leading-tight"
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              accessibilityRole="header"
-            >
-              {note.title || 'Untitled Note'}
-            </Text>
+        {/* Removed the outer {({ pressed }) => ... } wrapper as the new structure doesn't use it */}
+        <View>
+          <Text
+            className="text-base-content text-lg font-bold font-inter mb-2 leading-tight" // Updated font-semibold to font-bold
+            numberOfLines={1} // Changed to 1 line
+            ellipsizeMode="tail"
+            accessibilityRole="header"
+          >
+            {note.title || 'Untitled Note'}
+          </Text>
 
-            {/* Content preview - truncated to 3 lines */}
-            <Text
-              className="text-base-content/70 font-inter text-sm mb-4 leading-relaxed"
-              numberOfLines={3}
-              ellipsizeMode="tail"
-            >
-              {contentPreview || 'No content description available.'}
-            </Text>
+          <Text
+            className="text-base-content/30 text-sm font-inter leading-relaxed" // Changed /70 to /40
+            numberOfLines={4} // Changed to 4 lines
+            ellipsizeMode="tail"
+          >
+            {note.content || 'No content...'} {/* Used note.content directly */}
+          </Text>
+        </View>
 
-            {/* Date */}
-            <Text className="text-primary font-inter font-medium text-xs">
-              {formattedDate}
-            </Text>
+        <View className="flex-row items-center justify-between mt-auto pt-4"> {/* New View for footer */}
+          <Text className="text-primary/80 text-xs font-inter"> {/* Updated text color and font */}
+            {formattedDate}
+          </Text>
 
-          </View>
-        )}
+        </View>
       </Pressable>
     </Animated.View>
   );
