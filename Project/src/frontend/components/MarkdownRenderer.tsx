@@ -147,7 +147,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
       font-weight: bold;
     }
     .katex { 
-      font-size: 1.1em;
+      font-size: 1.2em;
       color: #FFFFFF;
     }
     .katex-display { 

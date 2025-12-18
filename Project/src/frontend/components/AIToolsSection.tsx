@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Sparkles, X, Copy, List, Lightbulb, CheckCheck, Send, AlertCircle } from 'lucide-react-native';
+import { Sparkle, X, Copy, List, Lightbulb, CheckCheck, Send, AlertCircle, Sparkles } from 'lucide-react-native';
 import MarkdownRenderer from './MarkdownRenderer';
 import useAIService from '../hooks/useAIService';
 
@@ -95,8 +95,8 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
       {/* Header */}
       <View className="flex-row items-center justify-between py-4 border-b border-base-300 bg-base-100" style={{ paddingHorizontal: contentPadding }}>
         <View className="flex-row items-center">
-          <Sparkles size={20} color="#3b82f6" fill="#3b82f6" />
-          <Text className="text-base-content text-lg font-bold font-inter ml-2">AI Assistant</Text>
+          <Sparkle size={20} color="#3b82f6" fill="#3b82f6" />
+          <Text className="text-base-content text-lg font-bold ml-2">AI Assistant</Text>
         </View>
         <TouchableOpacity onPress={onClose} className="p-2 -mr-2 rounded-full hover:bg-base-200">
           <X size={24} color="#94a3b8" />
@@ -113,10 +113,10 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
           {responses.length === 0 && (
             <View className="flex-1 items-center justify-center py-20 opacity-50">
               <View className="w-16 h-16 bg-base-200 rounded-full items-center justify-center mb-4 border border-base-300 shadow-sm">
-                <Sparkles size={32} color="#3b82f6" />
+                <Sparkle size={32} color="#3b82f6" fill="#3b82f6"/>
               </View>
-              <Text className="text-base-content font-bold text-lg font-inter">How can I help?</Text>
-              <Text className="text-base-content/60 text-sm font-inter text-center mt-1 px-8">
+              <Text className="text-base-content font-bold text-lg">How can I help?</Text>
+              <Text className="text-base-content/60 text-sm text-center mt-1 px-8">
                 Ask me to summarize, analyze, or improve your note.
               </Text>
             </View>
@@ -127,18 +127,18 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
               {/* User Message */}
               <View className="flex-row justify-end mb-4">
                 <View className="bg-primary rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-sm">
-                  <Text className="text-primary-content text-base font-inter leading-6">{response.prompt}</Text>
+                  <Text className="text-primary-content text-base leading-6">{response.prompt}</Text>
                 </View>
               </View>
 
               {/* Gemini Message */}
               <View className="flex-row items-start mb-8">
                 <View className="w-8 h-8 rounded-full bg-base-200 items-center justify-center mr-2 border border-base-300 shadow-sm mt-1 shrink-0">
-                  <Sparkles size={14} color="#3b82f6" fill="#3b82f6" />
+                  <Sparkle size={14} color="#3b82f6" fill="#3b82f6" />
                 </View>
                 <View className="flex-1 bg-base-200 rounded-2xl rounded-tl-sm p-4 border border-base-300 shadow-sm">
                   <View className="flex-row items-center justify-between mb-2 pb-2 border-b border-base-300/50">
-                    <Text className="text-primary font-bold text-xs uppercase tracking-wider font-inter">Gemini</Text>
+                    <Text className="text-primary font-bold text-xs uppercase tracking-wider">Gemini</Text>
                     <TouchableOpacity onPress={() => handleCopyResponse(response.response)} className="p-1 active:opacity-50">
                       <Copy size={14} color="#94a3b8" />
                     </TouchableOpacity>
@@ -152,14 +152,14 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
           {loading && (
             <View className="mb-4 p-4 flex-row items-center bg-base-200/50 rounded-2xl self-start">
               <ActivityIndicator size="small" color="#3b82f6" />
-              <Text className="text-base-content/60 text-sm ml-3 font-inter italic">Thinking...</Text>
+              <Text className="text-base-content/60 text-sm ml-3 italic">Thinking...</Text>
             </View>
           )}
 
           {error && (
             <View className="mb-4 p-3 bg-error/10 border border-error/20 rounded-xl flex-row items-center">
               <AlertCircle size={20} color="#f87171" />
-              <Text className="text-error text-sm flex-1 ml-2 font-inter">{error}</Text>
+              <Text className="text-error text-sm flex-1 ml-2">{error}</Text>
             </View>
           )}
         </ScrollView>
@@ -181,7 +181,7 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
                   className="bg-base-200 border border-base-300 rounded-full px-4 py-2 mr-2 flex-row items-center active:bg-base-300"
                 >
                   <action.icon size={14} color="#3b82f6" />
-                  <Text className="text-base-content/80 text-xs ml-1.5 font-bold font-inter">{action.label}</Text>
+                  <Text className="text-base-content/80 text-xs ml-1.5 font-bold">{action.label}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -194,7 +194,7 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
                 onChangeText={setPrompt}
                 placeholder="Ask something..."
                 placeholderTextColor="#94a3b8"
-                className="text-base-content text-base px-5 py-3 flex-1 font-inter min-h-[48px] max-h-[120px]"
+                className="text-base-content text-base px-5 py-3 flex-1 min-h-[48px] max-h-[120px]"
                 multiline
                 maxLength={500}
                 editable={!loading}

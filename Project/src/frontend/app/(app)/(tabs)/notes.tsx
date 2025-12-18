@@ -377,19 +377,19 @@ export default function NotesScreen() {
           {/* Subtle accent line similar to NoteCard */}
           <View className="absolute left-0 top-0 bottom-0 w-1 bg-primary/40" />
           
-          <Text className="text-primary font-bold font-inter text-lg mb-2" numberOfLines={1}>
+          <Text className="text-primary font-bold text-lg mb-2" numberOfLines={1}>
             {originalNote?.title || 'Note Fragment'}
           </Text>
-          <Text className="text-base-content/70 text-sm leading-5 font-inter" numberOfLines={4}>
+          <Text className="text-base-content/70 text-sm leading-5" numberOfLines={4}>
             {item.content}
           </Text>
           <View className="mt-auto flex-row justify-between items-center">
             <View className="flex-row items-center bg-primary/10 px-2 py-0.5 rounded-full">
-              <Text className="text-primary text-xs font-bold font-inter">
+              <Text className="text-primary text-xs font-bold">
                 {Math.round(item.similarity * 100)}% Match
               </Text>
             </View>
-            <Text className="text-base-content/40 text-xs font-inter">
+            <Text className="text-base-content/40 text-xs">
               Part {item.chunk_index + 1}/{item.total_chunks}
             </Text>
           </View>
@@ -432,8 +432,8 @@ export default function NotesScreen() {
           className="flex-1 items-center justify-center py-20"
           accessibilityLabel={`No notes found for ${searchQuery}`}
         >
-          <Text className="text-base-content/50 text-lg mb-2 font-inter font-medium">No notes found</Text>
-          <Text className="text-base-content/40 text-sm font-inter">
+          <Text className="text-base-content/50 text-lg mb-2 font-medium">No notes found</Text>
+          <Text className="text-base-content/40 text-sm">
             No results for "{searchQuery}"
           </Text>
         </View>
@@ -447,8 +447,8 @@ export default function NotesScreen() {
           className="flex-1 items-center justify-center py-20"
           accessibilityLabel="No notes yet. Create your first note to get started"
         >
-          <Text className="text-base-content/50 text-lg mb-2 font-inter font-medium">No notes yet</Text>
-          <Text className="text-base-content/40 text-sm font-inter">
+          <Text className="text-base-content/50 text-lg mb-2 font-medium">No notes yet</Text>
+          <Text className="text-base-content/40 text-sm">
             Create your first note to get started
           </Text>
         </View>

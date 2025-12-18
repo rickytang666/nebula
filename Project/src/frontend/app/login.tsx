@@ -82,7 +82,7 @@ export default function LoginPage() {
               className="flex-row items-center p-2 -ml-2 rounded-lg active:bg-base-200/50"
             >
               <ArrowLeft size={24} color="#94a3b8" />
-              <Text className="text-base-content/70 font-inter ml-2 text-base font-medium">Back</Text>
+              <Text className="text-base-content/70 ml-2 text-base font-medium">Back</Text>
             </Pressable>
           </View>
 
@@ -91,10 +91,10 @@ export default function LoginPage() {
             {/* Logo Section */}
             <View className="items-center mb-12">
               <NebulaLogo size={150} />
-              <Text className="text-base-content text-3xl font-bold font-inter mt-8 tracking-tight">
+              <Text className="text-base-content text-3xl font-bold mt-8 tracking-tight">
                 Welcome Back
               </Text>
-              <Text className="text-base-content/60 text-base font-inter mt-2">
+              <Text className="text-base-content/60 text-base mt-2">
                 Sign in to your notes
               </Text>
             </View>
@@ -102,7 +102,7 @@ export default function LoginPage() {
             {/* Login Form */}
             <View className="space-y-6">
               <View>
-                <Text className="text-base-content/70 text-sm font-medium font-inter mb-2 ml-1">
+                <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Email
                 </Text>
                 <TextInput
@@ -112,12 +112,12 @@ export default function LoginPage() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content font-inter text-base focus:border-primary"
+                  className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content text-base focus:border-primary"
                 />
               </View>
 
               <View>
-                <Text className="text-base-content/70 text-sm font-medium font-inter mb-2 ml-1">
+                <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Password
                 </Text>
                 <View className="relative">
@@ -128,7 +128,7 @@ export default function LoginPage() {
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
-                    className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content font-inter text-base focus:border-primary pr-12"
+                    className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content text-base focus:border-primary pr-12"
                   />
                   <Pressable
                     onPress={() => setShowPassword(!showPassword)}
@@ -143,7 +143,7 @@ export default function LoginPage() {
                 </View>
                 
                 <Pressable className="self-end mt-2 p-1" onPress={() => {}}>
-                  <Text className="text-primary text-sm font-medium font-inter">
+                  <Text className="text-primary text-sm font-medium">
                     Forgot Password?
                   </Text>
                 </Pressable>
@@ -158,7 +158,7 @@ export default function LoginPage() {
                 {isLoading ? (
                   <ActivityIndicator color="white" />
                 ) : (
-                  <Text className="text-white text-lg font-bold font-inter">
+                  <Text className="text-white text-lg font-bold">
                     Sign In
                   </Text>
                 )}
@@ -167,9 +167,9 @@ export default function LoginPage() {
 
             {/* Sign Up Link */}
             <View className="flex-row justify-center mt-8">
-              <Text className="text-base-content/60 font-inter">Don't have an account? </Text>
+              <Text className="text-base-content/60">Don't have an account? </Text>
               <Pressable onPress={() => router.push("/signup")}>
-                <Text className="text-primary font-bold font-inter">Sign Up</Text>
+                <Text className="text-primary font-bold">Sign Up</Text>
               </Pressable>
             </View>
             

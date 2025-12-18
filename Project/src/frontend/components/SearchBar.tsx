@@ -29,7 +29,7 @@ export default function SearchBar({
         <Search size={20} color="#94a3b8" />
       </Pressable>
       <TextInput
-        className="flex-1 text-base-content font-inter ml-2 mr-2 text-base min-w-0"
+        className="flex-1 text-base-content ml-2 mr-2 text-base min-w-0"
         value={value}
         onChangeText={onChangeText}
         onSubmitEditing={onSearch}

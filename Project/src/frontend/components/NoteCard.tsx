@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { View, Text, Pressable, ScrollView, Animated } from 'react-native';
+import { View, Text, Pressable, Animated } from 'react-native';
 import { Note } from '../types/note';
 import { formatRelativeTime } from '../utils/noteUtils';
+import { Clock2 } from 'lucide-react-native';
 
 interface NoteCardProps {
   note: Note;
@@ -54,7 +55,7 @@ function NoteCard({ note, onPress }: NoteCardProps) {
         {/* Removed the outer {({ pressed }) => ... } wrapper as the new structure doesn't use it */}
         <View>
           <Text
-            className="text-base-content text-lg font-bold font-inter mb-2 leading-tight" // Updated font-semibold to font-bold
+            className="text-base-content text-lg font-bold mb-2 leading-tight" // Updated font-semibold to font-bold
             numberOfLines={1} // Changed to 1 line
             ellipsizeMode="tail"
             accessibilityRole="header"
@@ -63,7 +64,7 @@ function NoteCard({ note, onPress }: NoteCardProps) {
           </Text>
 
           <Text
-            className="text-base-content/30 text-sm font-inter leading-relaxed" // Changed /70 to /40
+            className="text-base-content/30 text-sm leading-relaxed" // Changed /70 to /40
             numberOfLines={4} // Changed to 4 lines
             ellipsizeMode="tail"
           >
@@ -71,8 +72,9 @@ function NoteCard({ note, onPress }: NoteCardProps) {
           </Text>
         </View>
 
-        <View className="flex-row items-center justify-between mt-auto pt-4">
-          <Text className="text-primary/80 text-xs font-inter">
+        <View className="flex-row items-center justify-end mt-auto pt-4">
+          <Clock2 size={16} color={"#507ebfff"}/>
+          <Text className="text-primary text-xs ml-1">
             {formattedDate}
           </Text>
         </View>

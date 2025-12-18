@@ -124,7 +124,7 @@ export default function SignUpPage() {
               className="flex-row items-center p-2 -ml-2 rounded-lg active:bg-base-200/50"
             >
               <ArrowLeft size={24} color="#94a3b8" />
-              <Text className="text-base-content/70 font-inter ml-2 text-base font-medium">Back</Text>
+              <Text className="text-base-content/70 ml-2 text-base font-medium">Back</Text>
             </Pressable>
           </View>
 
@@ -133,10 +133,10 @@ export default function SignUpPage() {
             {/* Header */}
             <View className="mb-8 items-center">
               <NebulaLogo size={150} />
-              <Text className="text-base-content text-3xl font-bold font-inter tracking-tight">
+              <Text className="text-base-content text-3xl font-bold tracking-tight">
                 Create Account
               </Text>
-              <Text className="text-base-content/60 text-base font-inter mt-2">
+              <Text className="text-base-content/60 text-base mt-2">
                 Start taking notes with Nebula today
               </Text>
             </View>
@@ -145,7 +145,7 @@ export default function SignUpPage() {
             <View className="space-y-5">
               
               <View>
-                <Text className="text-base-content/70 text-sm font-medium font-inter mb-2 ml-1">
+                <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Full Name
                 </Text>
                 <TextInput
@@ -153,12 +153,12 @@ export default function SignUpPage() {
                   placeholderTextColor="#94a3b8"
                   value={name}
                   onChangeText={setName}
-                  className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content font-inter text-base focus:border-primary"
+                  className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content text-base focus:border-primary"
                 />
               </View>
 
               <View>
-                <Text className="text-base-content/70 text-sm font-medium font-inter mb-2 ml-1">
+                <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Email
                 </Text>
                 <TextInput
@@ -168,12 +168,12 @@ export default function SignUpPage() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content font-inter text-base focus:border-primary"
+                  className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content text-base focus:border-primary"
                 />
               </View>
 
               <View>
-                <Text className="text-base-content/70 text-sm font-medium font-inter mb-2 ml-1">
+                <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Password
                 </Text>
                 <View className="relative">
@@ -184,7 +184,7 @@ export default function SignUpPage() {
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
-                    className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content font-inter text-base focus:border-primary pr-12"
+                    className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content text-base focus:border-primary pr-12"
                   />
                   <Pressable
                     onPress={() => setShowPassword(!showPassword)}
@@ -200,7 +200,7 @@ export default function SignUpPage() {
               </View>
 
               <View>
-                <Text className="text-base-content/70 text-sm font-medium font-inter mb-2 ml-1">
+                <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Confirm Password
                 </Text>
                 <View className="relative">
@@ -211,7 +211,7 @@ export default function SignUpPage() {
                     onChangeText={setConfirmPassword}
                     secureTextEntry={!showConfirmPassword}
                     autoCapitalize="none"
-                    className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content font-inter text-base focus:border-primary pr-12"
+                    className="bg-base-200 border border-base-300 rounded-xl px-4 py-3.5 text-base-content text-base focus:border-primary pr-12"
                   />
                   <Pressable
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -235,7 +235,7 @@ export default function SignUpPage() {
                 {isLoading ? (
                   <ActivityIndicator color="white" />
                 ) : (
-                  <Text className="text-white text-lg font-bold font-inter">
+                  <Text className="text-white text-lg font-bold">
                     Create Account
                   </Text>
                 )}
@@ -245,9 +245,9 @@ export default function SignUpPage() {
 
             {/* Sign In Link */}
             <View className="flex-row justify-center mt-8 mb-4">
-              <Text className="text-base-content/60 font-inter">Already have an account? </Text>
+              <Text className="text-base-content/60">Already have an account? </Text>
               <Pressable onPress={() => router.push("/login")}>
-                <Text className="text-primary font-bold font-inter">Sign In</Text>
+                <Text className="text-primary font-bold">Sign In</Text>
               </Pressable>
             </View>
 

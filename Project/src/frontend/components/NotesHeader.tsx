@@ -34,7 +34,7 @@ export default function NotesHeader({ onNewNote, onScan }: NotesHeaderProps) {
     <View className="flex-row items-center justify-between mb-6">
       <View className="flex-row items-center">
         <NebulaLogo size={50} />
-        <Text className="text-base-content text-3xl font-bold font-inter tracking-tight">
+        <Text className="text-base-content text-3xl font-bold tracking-tight">
           Nebula
         </Text>
       </View>

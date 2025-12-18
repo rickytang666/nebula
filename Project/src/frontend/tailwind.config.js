@@ -245,13 +245,15 @@ module.exports = {
       },
       fontFamily: {
         heading: undefined,
-        body: undefined,
+        body: ['PlusJakartaSans_400Regular'],
         mono: ['JetBrainsMono_400Regular'],
-        jakarta: ['var(--font-plus-jakarta-sans)'],
+        sans: ['PlusJakartaSans_400Regular'], // Default sans
+        bold: ['PlusJakartaSans_700Bold'], // Short command for bold
+        semibold: ['PlusJakartaSans_600SemiBold'], // Short command for semibold
+        jakarta: ['PlusJakartaSans_400Regular'],
         roboto: ['var(--font-roboto)'],
         code: ['var(--font-source-code-pro)'],
-        inter: ['Inter_400Regular', 'Inter_500Medium', 'Inter_600SemiBold', 'Inter_700Bold', 'sans-serif'],
-        'space-mono': ['var(--font-space-mono)'],
+        'sans-serif': ['sans-serif'],
       },
       fontWeight: {
         extrablack: '950',

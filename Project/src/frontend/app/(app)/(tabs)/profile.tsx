@@ -92,17 +92,17 @@ export default function ProfileScreen() {
         <ScrollView contentContainerStyle={{ padding: 24, flexGrow: 1 }}>
           
           {/* Header */}
-          <Text className="text-base-content text-center text-3xl font-bold font-inter mb-8">Profile</Text>
+          <Text className="text-base-content text-center text-3xl font-bold mb-8">Profile</Text>
 
           {/* Avatar Section */}
           <View className="items-center mb-10">
             <View className="w-28 h-28 bg-primary/20 rounded-full items-center justify-center mb-4 border border-primary/30 shadow-sm">
               <User size={40} color="#3b82f6" />
             </View>
-            <Text className="text-base-content text-xl font-bold font-inter">{fullName || 'User'}</Text>
+            <Text className="text-base-content text-xl font-bold">{fullName || 'User'}</Text>
             <View className="flex-row items-center mt-1">
               <Mail size={14} color="#94a3b8" />
-              <Text className="text-base-content/60 ml-1.5 font-inter">{user?.email}</Text>
+              <Text className="text-base-content/60 ml-1.5">{user?.email}</Text>
             </View>
           </View>
 
@@ -110,7 +110,7 @@ export default function ProfileScreen() {
           <View className="mb-6 space-y-4">
             <View>
               <View className="flex-row items-center">
-                <Text className="text-base-content/70 mb-2 text-sm font-medium font-inter ml-1">Full Name</Text>
+                <Text className="text-base-content/70 mb-2 text-sm font-medium ml-1">Full Name</Text>
               </View>
               <View className="flex-row items-center bg-base-200 border border-base-300 rounded-xl h-12 px-3">
                 <TextInput
@@ -118,7 +118,7 @@ export default function ProfileScreen() {
                   onChangeText={setFullName}
                   placeholder="Enter your name"
                   placeholderTextColor="#64748b"
-                  className="flex-1 ml-3 text-base-content text-base font-inter"
+                  className="flex-1 ml-3 text-base-content text-base"
                   autoCapitalize="words"
                   autoComplete="name"
                   style={{ paddingVertical: 0, height: 48, lineHeight: 20 }}
@@ -137,7 +137,7 @@ export default function ProfileScreen() {
             ) : (
               <>
                 <Save size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
-                <Text className="font-bold text-white font-inter">
+                <Text className="font-bold text-white">
                   Save Changes
                 </Text>
               </>
@@ -150,7 +150,7 @@ export default function ProfileScreen() {
               className="flex-row items-center justify-center py-4 rounded-xl border border-error/20 bg-error/5 active:bg-error/10"
             >
               <LogOut size={20} color="#f87171" style={{ marginRight: 8 }} />
-              <Text className="text-error font-bold text-base font-inter">Sign Out</Text>
+              <Text className="text-error font-bold text-base">Sign Out</Text>
             </TouchableOpacity>
           </View>
 

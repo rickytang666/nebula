@@ -2,12 +2,12 @@ import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { View, ActivityIndicator, useColorScheme } from "react-native";
 import { 
-  useFonts, 
-  Inter_400Regular, 
-  Inter_500Medium, 
-  Inter_600SemiBold, 
-  Inter_700Bold 
-} from "@expo-google-fonts/inter";
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
 import { JetBrainsMono_400Regular } from "@expo-google-fonts/jetbrains-mono";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
@@ -18,10 +18,10 @@ function RootLayoutNav() {
   const { session, loading } = useAuth();
   const colorScheme = useColorScheme();
   const [fontsLoaded] = useFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
     JetBrainsMono_400Regular,
   });
 

@@ -63,7 +63,7 @@ export default function SortControls({ sortBy, onSortChange }: SortControlsProps
                 accessibilityState={{ selected: sortBy === option.value }}
               >
                 <View style={{ flex: 1, justifyContent: 'center' }}>
-                  <Text className={`text-base font-inter ${sortBy === option.value ? 'text-primary font-semibold' : 'text-base-content/80'}`}>
+                  <Text className={`text-base ${sortBy === option.value ? 'text-primary font-semibold' : 'text-base-content/80'}`}>
                     {option.label}
                   </Text>
                 </View>

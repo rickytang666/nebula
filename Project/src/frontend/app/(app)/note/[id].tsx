@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Sparkles, Check, Pencil, Trash2 } from 'lucide-react-native';
+import { ArrowLeft, Sparkle, Check, Pencil, Trash2 } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 import AIToolsModal from '@/components/AIToolsModal';
@@ -255,7 +255,7 @@ export default function NoteDetailScreen() {
     return (
       <SafeAreaView className="flex-1 bg-base-100 items-center justify-center">
         <StatusBar barStyle="light-content" backgroundColor="#020617" />
-        <Text className="text-base-content/50 font-inter">Loading...</Text>
+        <Text className="text-base-content/50">Loading...</Text>
       </SafeAreaView>
     );
   }
@@ -286,9 +286,9 @@ export default function NoteDetailScreen() {
               {isEditMode && saveStatus !== 'idle' && (
                 <View className="flex-row items-center mr-3">
                   {saveStatus === 'saving' ? (
-                    <Text className="text-base-content/40 text-xs font-inter">Saving...</Text>
+                    <Text className="text-base-content/40 text-xs">Saving...</Text>
                   ) : (
-                    <Text className="text-base-content/40 text-xs font-inter">Saved</Text>
+                    <Text className="text-base-content/40 text-xs">Saved</Text>
                   )}
                 </View>
               )}
@@ -298,7 +298,7 @@ export default function NoteDetailScreen() {
                 onPress={toggleAIMode}
                 className="p-2 rounded-xl hover:bg-primary/10 active:bg-primary/20"
               >
-                <Sparkles size={20} color="#60a5fa" />
+                <Sparkle size={20} color="#60a5fa" />
               </TouchableOpacity>
 
               {/* Edit/Preview Toggle */}
@@ -342,12 +342,12 @@ export default function NoteDetailScreen() {
                 onChangeText={handleTitleChange}
                 placeholder="Note title"
                 placeholderTextColor="#64748b"
-                className="text-base-content text-3xl font-bold py-6 font-inter border-b border-base-300"
+                className="text-base-content text-3xl font-bold py-6 border-b border-base-300"
                 multiline
               />
             ) : (
               <View>
-                <Text className="text-base-content text-3xl font-bold py-6 font-inter border-b border-base-300">
+                <Text className="text-base-content text-3xl font-bold py-6 border-b border-base-300">
                   {title || 'Untitled Note'}
                 </Text>
               </View>
@@ -372,7 +372,7 @@ export default function NoteDetailScreen() {
                   {content ? (
                     <MarkdownRenderer content={content} />
                   ) : (
-                    <Text className="text-base-content/40 text-base font-inter italic">
+                    <Text className="text-base-content/40 text-base italic">
                       Tap the edit button to start writing...
                     </Text>
                   )}
