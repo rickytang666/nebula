@@ -346,11 +346,11 @@ export default function NoteDetailScreen() {
                 multiline
               />
             ) : (
-              <TouchableOpacity onPress={toggleEditMode} activeOpacity={0.9}>
+              <View>
                 <Text className="text-base-content text-3xl font-bold py-6 font-inter border-b border-base-300">
                   {title || 'Untitled Note'}
                 </Text>
-              </TouchableOpacity>
+              </View>
             )}
 
             {/* Content Editor */}
@@ -360,23 +360,24 @@ export default function NoteDetailScreen() {
                 onChangeText={handleContentChange}
                 placeholder="Start writing..."
                 placeholderTextColor="#64748b"
-                className="text-base-content text-base leading-7 py-6 font-mono"
+                className="text-base-content text-sm leading-7 py-6 font-mono"
                 multiline
                 textAlignVertical="top"
-                style={{ minHeight: 500 }}
+                style={{ minHeight: 300 }}
+                scrollEnabled={false}
               />
             ) : (
-              <TouchableOpacity onPress={toggleEditMode} activeOpacity={0.9} style={{ minHeight: 500 }}>
+              <View style={{ minHeight: 500 }}>
                 <View style={{ paddingTop: 24, paddingBottom: 60 }}>
                   {content ? (
                     <MarkdownRenderer content={content} />
                   ) : (
                     <Text className="text-base-content/40 text-base font-inter italic">
-                      Tap to start writing...
+                      Tap the edit button to start writing...
                     </Text>
                   )}
                 </View>
-              </TouchableOpacity>
+              </View>
             )}
           </ScrollView>
         </KeyboardAvoidingView>

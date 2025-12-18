@@ -40,7 +40,7 @@ export default function NotesHeader({ onNewNote, onScan }: NotesHeaderProps) {
       </View>
 
       <Pressable
-        className="bg-primary rounded-xl px-4 flex-row items-center shadow-lg shadow-blue-900/20"
+        className="bg-primary rounded-xl px-4 flex-row items-center"
         style={{ minHeight: 44 }}
         onPress={handleCreatePress}
         android_ripple={{ color: 'rgba(255, 255, 255, 0.2)' }}
@@ -51,9 +51,6 @@ export default function NotesHeader({ onNewNote, onScan }: NotesHeaderProps) {
         {({ pressed }) => (
           <View style={{ opacity: pressed ? 0.8 : 1 }} className="flex-row items-center">
             <Plus size={20} color="white" strokeWidth={2.5} />
-            <Text className="text-white font-semibold font-inter ml-1.5">
-              New Note
-            </Text>
           </View>
         )}
       </Pressable>

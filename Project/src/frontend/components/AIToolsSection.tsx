@@ -112,30 +112,37 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
         >
           {responses.length === 0 && (
             <View className="flex-1 items-center justify-center py-20 opacity-50">
-              <Sparkles size={48} color="#94a3b8" />
-              <Text className="text-base-content/60 text-center mt-4 font-inter">Ask Gemini about your note</Text>
+              <View className="w-16 h-16 bg-base-200 rounded-full items-center justify-center mb-4 border border-base-300 shadow-sm">
+                <Sparkles size={32} color="#3b82f6" />
+              </View>
+              <Text className="text-base-content font-bold text-lg font-inter">How can I help?</Text>
+              <Text className="text-base-content/60 text-sm font-inter text-center mt-1 px-8">
+                Ask me to summarize, analyze, or improve your note.
+              </Text>
             </View>
           )}
 
           {responses.map((response) => (
-            <View key={response.id} className="mb-6 space-y-3">
+            <View key={response.id} className="mb-2">
               {/* User Message */}
-              <View className="self-end bg-primary/10 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] border border-primary/20">
-                <Text className="text-base-content font-inter text-sm leading-5">{response.prompt}</Text>
+              <View className="flex-row justify-end mb-4">
+                <View className="bg-primary rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-sm">
+                  <Text className="text-primary-content text-base font-inter leading-6">{response.prompt}</Text>
+                </View>
               </View>
 
               {/* Gemini Message */}
-              <View className="self-start w-full bg-base-200 rounded-2xl rounded-tl-sm px-4 py-4 border border-base-300">
-                <View className="flex-row items-center justify-between mb-2">
-                  <View className="flex-row items-center space-x-2">
-                    <Sparkles size={14} color="#3b82f6" />
-                    <Text className="text-xs text-base-content/50 font-inter font-bold uppercase tracking-wider">Gemini</Text>
-                  </View>
-                  <TouchableOpacity onPress={() => handleCopyResponse(response.response)} className="p-1">
-                    <Copy size={14} color="#94a3b8" />
-                  </TouchableOpacity>
+              <View className="flex-row items-start mb-8">
+                <View className="w-8 h-8 rounded-full bg-base-200 items-center justify-center mr-2 border border-base-300 shadow-sm mt-1 shrink-0">
+                  <Sparkles size={14} color="#3b82f6" fill="#3b82f6" />
                 </View>
-                <View className="bg-transparent">
+                <View className="flex-1 bg-base-200 rounded-2xl rounded-tl-sm p-4 border border-base-300 shadow-sm">
+                  <View className="flex-row items-center justify-between mb-2 pb-2 border-b border-base-300/50">
+                    <Text className="text-primary font-bold text-xs uppercase tracking-wider font-inter">Gemini</Text>
+                    <TouchableOpacity onPress={() => handleCopyResponse(response.response)} className="p-1 active:opacity-50">
+                      <Copy size={14} color="#94a3b8" />
+                    </TouchableOpacity>
+                  </View>
                   <MarkdownRenderer content={response.response} />
                 </View>
               </View>
@@ -180,21 +187,23 @@ export const AIToolsSection: React.FC<AIToolsSectionProps> = ({
             </ScrollView>
 
             {/* Input Field */}
-            <View className="bg-base-200 rounded-2xl border border-base-300 flex-row items-center pr-2 shadow-sm">
+            {/* Input Field */}
+            <View className="bg-base-200 rounded-full border border-base-300 flex-row items-center pr-2 shadow-sm mt-3">
               <TextInput
                 value={prompt}
                 onChangeText={setPrompt}
                 placeholder="Ask something..."
                 placeholderTextColor="#94a3b8"
-                className="text-base-content text-base px-5 py-4 flex-1 font-inter min-h-[56px] min-w-0" // min-w-0 for flex
+                className="text-base-content text-base px-5 py-3 flex-1 font-inter min-h-[48px] max-h-[120px]"
                 multiline
                 maxLength={500}
                 editable={!loading}
+                textAlignVertical="center"
               />
               <TouchableOpacity 
                 onPress={handleSubmitPrompt} 
                 disabled={loading || !prompt.trim()}
-                className={`p-2 rounded-xl transition-all ${loading || !prompt.trim() ? 'bg-transparent' : 'bg-primary shadow-sm shadow-blue-500/30'}`}
+                className={`p-2 rounded-full ${loading || !prompt.trim() ? 'bg-transparent' : 'bg-primary'}`}
               >
                 <Send size={20} color={loading || !prompt.trim() ? "#cbd5e1" : "#ffffff"} />
               </TouchableOpacity>

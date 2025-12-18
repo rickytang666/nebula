@@ -71,11 +71,10 @@ function NoteCard({ note, onPress }: NoteCardProps) {
           </Text>
         </View>
 
-        <View className="flex-row items-center justify-between mt-auto pt-4"> {/* New View for footer */}
-          <Text className="text-primary/80 text-xs font-inter"> {/* Updated text color and font */}
+        <View className="flex-row items-center justify-between mt-auto pt-4">
+          <Text className="text-primary/80 text-xs font-inter">
             {formattedDate}
           </Text>
-
         </View>
       </Pressable>
     </Animated.View>

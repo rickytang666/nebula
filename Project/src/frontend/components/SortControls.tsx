@@ -28,7 +28,7 @@ export default function SortControls({ sortBy, onSortChange }: SortControlsProps
   return (
     <>
       <Pressable
-        className="bg-base-200 rounded-2xl border border-base-300 items-center justify-center h-12 w-12"
+        className="bg-base-200 rounded-2xl border border-base-300 items-center justify-center h-10 w-10"
         onPress={() => setIsModalVisible(true)}
         accessibilityLabel={`Sort by ${currentOption?.label}`}
         accessibilityRole="button"
@@ -51,11 +51,11 @@ export default function SortControls({ sortBy, onSortChange }: SortControlsProps
           accessibilityLabel="Close sort menu"
           accessibilityRole="button"
         >
-          <View className="bg-base-200 rounded-2xl border border-base-300 mx-6 overflow-hidden shadow-2xl">
+          <View className="bg-base-200 rounded-2xl border border-base-300 mx-4 overflow-hidden shadow-2xl">
             {SORT_OPTIONS.map((option) => (
               <Pressable
                 key={option.value}
-                className={`px-6 ${sortBy === option.value ? 'bg-base-300' : ''}`}
+                className={`px-4 ${sortBy === option.value ? 'bg-base-300' : ''}`}
                 style={{ minHeight: 56 }}
                 onPress={() => handleOptionSelect(option.value)}
                 accessibilityLabel={option.label}

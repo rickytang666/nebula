@@ -96,10 +96,8 @@ export default function ProfileScreen() {
 
           {/* Avatar Section */}
           <View className="items-center mb-10">
-            <View className="w-28 h-28 bg-primary/20 rounded-full items-center justify-center mb-4 border border-primary/30 shadow-lg shadow-blue-500/20">
-              <Text className="text-5xl text-primary font-bold font-inter">
-                {fullName ? fullName.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || '?'}
-              </Text>
+            <View className="w-28 h-28 bg-primary/20 rounded-full items-center justify-center mb-4 border border-primary/30 shadow-sm">
+              <User size={40} color="#3b82f6" />
             </View>
             <Text className="text-base-content text-xl font-bold font-inter">{fullName || 'User'}</Text>
             <View className="flex-row items-center mt-1">
@@ -111,20 +109,19 @@ export default function ProfileScreen() {
           {/* Form Section */}
           <View className="mb-6 space-y-4">
             <View>
-              <Text className="text-base-content/70 mb-2 text-sm font-medium font-inter ml-1">Full Name</Text>
-              <View className="relative">
-                <View className="absolute left-4 top-0 bottom-0 justify-center z-10">
-                  <User size={20} color="#94a3b8" />
-                </View>
+              <View className="flex-row items-center">
+                <Text className="text-base-content/70 mb-2 text-sm font-medium font-inter ml-1">Full Name</Text>
+              </View>
+              <View className="flex-row items-center bg-base-200 border border-base-300 rounded-xl h-12 px-3">
                 <TextInput
                   value={fullName}
                   onChangeText={setFullName}
                   placeholder="Enter your name"
                   placeholderTextColor="#64748b"
-                  className="bg-base-200 border border-base-300 text-base-content rounded-xl px-4 pl-12 py-3.5 text-base font-inter focus:border-primary"
+                  className="flex-1 ml-3 text-base-content text-base font-inter"
                   autoCapitalize="words"
                   autoComplete="name"
-                  textAlignVertical="center"
+                  style={{ paddingVertical: 0, height: 48, lineHeight: 20 }}
                 />
               </View>
             </View>
@@ -133,18 +130,14 @@ export default function ProfileScreen() {
           <TouchableOpacity
             onPress={handleSave}
             disabled={!hasChanges || saving}
-            className={`flex-row justify-center items-center py-4 rounded-xl shadow-sm mb-6 transition-all ${
-              hasChanges && !saving 
-                ? 'bg-primary shadow-blue-500/20 active:bg-blue-600' 
-                : 'bg-base-200 opacity-50'
-            }`}
+            className="flex-row justify-center items-center py-4 rounded-xl shadow-sm mb-6 transition-all bg-primary"
           >
             {saving ? (
-              <ActivityIndicator color={hasChanges ? "#FFFFFF" : "#94a3b8"} />
+              <ActivityIndicator color="#FFFFFF" />
             ) : (
               <>
-                <Save size={20} color={hasChanges ? "#FFFFFF" : "#94a3b8"} style={{ marginRight: 8 }} />
-                <Text className={`font-bold text-base font-inter ${hasChanges ? 'text-white' : 'text-base-content/50'}`}>
+                <Save size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+                <Text className="font-bold text-white font-inter">
                   Save Changes
                 </Text>
               </>

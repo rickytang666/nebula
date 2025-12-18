@@ -24,7 +24,7 @@ export default function SearchBar({
   };
 
   return (
-    <View className="bg-base-200 rounded-full border border-base-300 flex-row items-center px-4" style={{ minHeight: 48 }}>
+    <View className="bg-base-200 rounded-full border border-base-300 flex-row items-center px-4 mr-4" style={{ minHeight: 40 }}>
       <Pressable onPress={onSearch} hitSlop={8}>
         <Search size={20} color="#94a3b8" />
       </Pressable>
