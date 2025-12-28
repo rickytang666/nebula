@@ -6,8 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
-  SafeAreaView,
   Alert,
   View,
   Text,
@@ -15,6 +13,7 @@ import {
   Pressable,
   ActivityIndicator
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react-native";
 import NebulaLogo from "../components/NebulaLogo";
 import { supabase } from "@/lib/supabase";

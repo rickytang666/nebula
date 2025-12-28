@@ -36,5 +36,4 @@ export {
   Avatar,
   AvatarImage,
   AvatarFallbackText,
-  SafeAreaView,
 } from '@gluestack-ui/themed';

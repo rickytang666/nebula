@@ -6,15 +6,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
   Alert,
-  SafeAreaView,
   View,
   Text,
   TextInput,
   Pressable,
   ActivityIndicator
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft, Eye, EyeOff, Check } from "lucide-react-native";
 import { supabase } from "@/lib/supabase";
 import { api } from "@/services/api";
