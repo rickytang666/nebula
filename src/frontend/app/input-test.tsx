@@ -220,7 +220,7 @@ export default function InputTestPage() {
               style={{ paddingVertical: 0 }}
             />
           </View>
-          <Text style={{ fontSize: 10, color: '#aaa', marginTop: 4 }}>This input does NOT update React state (typing won't update UI elsewhere).</Text>
+          <Text style={{ fontSize: 10, color: '#aaa', marginTop: 4 }}>This input does NOT update React state (typing won&apos;t update UI elsewhere).</Text>
         </View>
 
         {/* 13. PURE LISTEN (onChangeText ONLY) */}
