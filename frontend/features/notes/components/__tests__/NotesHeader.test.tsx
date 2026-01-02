@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native';
 import NotesHeader from '../NotesHeader';
 
 // Mock UI components
-jest.mock('../../components/ui', () => {
+jest.mock('../../../../components/ui', () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { View, Text } = require('react-native');
     return {

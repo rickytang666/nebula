@@ -29,7 +29,7 @@ export default function SearchBar({
         <Search size={20} color="#94a3b8" />
       </Pressable>
       <TextInput
-        className="flex-1 text-base-content ml-2 mr-2 text-base min-w-0"
+        className="flex-1 text-base-content ml-2 mr-2 min-w-0"
         value={value}
         onChangeText={onChangeText}
         onSubmitEditing={onSearch}
@@ -39,7 +39,7 @@ export default function SearchBar({
         accessibilityLabel="Search notes"
         accessibilityHint="Type to search notes by title"
         textAlignVertical="center"
-        style={{ paddingVertical: 0, height: '100%' }}
+        style={{ fontSize: 16, fontFamily: 'PlusJakartaSans_400Regular', paddingVertical: 0, height: '100%' }}
       />
       <View className="flex-row items-center gap-2 shrink-0">
         {onToggleSemantic && (

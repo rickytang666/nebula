@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { View, Text, Pressable, Animated } from 'react-native';
-import { Note } from '../types/note';
-import { formatRelativeTime } from '../utils/noteUtils';
+import { Note } from '../../../types/note';
+import { formatRelativeTime } from '../../../utils/noteUtils';
 import { Clock2 } from 'lucide-react-native';
 
 interface NoteCardProps {

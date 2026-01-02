@@ -1,7 +1,8 @@
 import pytest
-from unittest.mock import MagicMock, patch, AsyncMock
+from unittest.mock import MagicMock, patch
 from fastapi import HTTPException
 from app.routes.embeddings import embed_note
+from app.schemas.embeddings import EmbeddingResponse
 
 @pytest.mark.asyncio
 async def test_embed_note_success():
@@ -11,25 +12,31 @@ async def test_embed_note_success():
     current_user = {"id": user_id}
     
     mock_supabase = MagicMock()
+    # Mock note fetch - success
     mock_db_note = {"id": note_id, "user_id": user_id, "title": "T", "content": "C"}
-    
-    # Mock Select
     mock_supabase.table.return_value.select.return_value.eq.return_value.single.return_value.execute.return_value.data = mock_db_note
-    # Mock Delete/Insert
-    mock_supabase.table.return_value.delete.return_value.eq.return_value.execute.return_value = None
-    mock_supabase.table.return_value.insert.return_value.execute.return_value = None
     
-    with patch("app.routes.embeddings.prepare_note_for_embedding") as mock_prep:
-        mock_prep.return_value = [{"chunk_index": 0, "total_chunks": 1, "content": "C"}]
+    # Patch EmbeddingService.embed_note
+    with patch("app.services.embeddings.EmbeddingService.embed_note") as mock_service_embed:
+        # Mock what the service returns (list of chunks)
+        mock_service_embed.return_value = [{"chunk": 1}]
         
-        with patch("app.routes.embeddings.embed_chunks") as mock_embed:
-            mock_embed.return_value = [{"chunk_index": 0, "total_chunks": 1, "content": "C", "embedding": [0.1]}]
-            
-            response = await embed_note(note_id, 1000, current_user, mock_supabase)
-            
-            assert response.chunks_created == 1
-            assert response.note_id == note_id
-            
+        response = await embed_note(note_id, 1000, current_user, mock_supabase)
+        
+        # Assertions
+        assert isinstance(response, EmbeddingResponse)
+        assert response.chunks_created == 1
+        assert response.note_id == note_id
+        
+        mock_service_embed.assert_called_once_with(
+            supabase=mock_supabase,
+            user_id=user_id,
+            note_id=note_id,
+            title="T",
+            content="C",
+            chunk_size=1000
+        )
+
 @pytest.mark.asyncio
 async def test_embed_note_forbidden():
     mock_supabase = MagicMock()

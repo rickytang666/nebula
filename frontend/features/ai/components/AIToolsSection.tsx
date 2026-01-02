@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { Sparkle, X, Copy, List, Lightbulb, CheckCheck, Send, AlertCircle } from 'lucide-react-native';
-import MarkdownRenderer from './MarkdownRenderer';
+import MarkdownRenderer from '../../../components/shared/MarkdownRenderer';
 import useAIService from '../hooks/useAIService';
 
 export interface AIResponse {

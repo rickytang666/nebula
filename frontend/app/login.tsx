@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react-native";
-import NebulaLogo from "../components/NebulaLogo";
+import { Image } from 'expo-image';
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -92,7 +92,12 @@ export default function LoginPage() {
             
             {/* Logo Section */}
             <View className="items-center mb-12">
-              <NebulaLogo size={150} />
+              <Image
+                source={require('@/public/logo.svg')}
+                style={{ width: 150, height: 150 }}
+                contentFit="contain"
+                transition={100}
+              />
               <Text className="text-base-content text-3xl font-bold mt-8 tracking-tight">
                 Welcome Back
               </Text>

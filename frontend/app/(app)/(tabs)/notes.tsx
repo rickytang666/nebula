@@ -20,11 +20,11 @@ import {
   generateEmbeddingsForAllNotes,
 } from "@/utils/noteStorage";
 import { filterNotesBySearch, sortNotes } from "@/utils/noteUtils";
-import NotesHeader from "@/components/NotesHeader";
-import SearchBar from "@/components/SearchBar";
-import SortControls from "@/components/SortControls";
-import NoteCard from "@/components/NoteCard";
-import NoteCardSkeleton from "@/components/NoteCardSkeleton";
+import NotesHeader from "@/features/notes/components/NotesHeader";
+import SearchBar from "@/features/notes/components/SearchBar";
+import SortControls from "@/features/notes/components/SortControls";
+import NoteCard from "@/features/notes/components/NoteCard";
+import NoteCardSkeleton from "@/features/notes/components/NoteCardSkeleton";
 import { Note, SortOption, SemanticSearchResult } from "@/types/note";
 
 import { API_URL } from "@/constants/env";

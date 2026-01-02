@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, Modal, StyleSheet } from 'react-native';
 import { ArrowDownUp } from 'lucide-react-native';
-import { SortOption } from '../types/note';
+import { SortOption } from '../../../types/note';
 
 interface SortControlsProps {
   sortBy: SortOption;

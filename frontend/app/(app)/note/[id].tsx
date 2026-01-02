@@ -16,8 +16,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Sparkle, Check, Pencil, Trash2 } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MarkdownRenderer from '@/components/MarkdownRenderer';
-import AIToolsModal from '@/components/AIToolsModal';
+import MarkdownRenderer from '@/components/shared/MarkdownRenderer';
+import AIToolsModal from '@/features/ai/components/AIToolsModal';
 import { Note } from '@/types/note';
 import { getNoteById, saveNote as saveNoteToStorage, deleteNote as deleteNoteFromStorage } from '@/utils/noteStorage';
 

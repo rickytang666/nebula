@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import NoteCard from '../NoteCard';
-import { Note } from '../../types/note';
+import { Note } from '../../../../types/note';
 
 // Mock navigation
 const mockRouter = { push: jest.fn() };

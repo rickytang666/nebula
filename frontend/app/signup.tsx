@@ -17,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react-native";
 import { supabase } from "@/lib/supabase";
 import { api } from "@/services/api";
-import NebulaLogo from "@/components/NebulaLogo";
+import { Image } from 'expo-image';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -136,7 +136,12 @@ export default function SignUpPage() {
             
             {/* Header */}
             <View className="mb-8 items-center">
-              <NebulaLogo size={150} />
+              <Image
+                source={require('@/public/logo.svg')}
+                style={{ width: 150, height: 150 }}
+                contentFit="contain"
+                transition={100}
+              />
               <Text className="text-base-content text-3xl font-bold tracking-tight">
                 Create Account
               </Text>

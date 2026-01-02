@@ -86,6 +86,7 @@ jest.mock('react-native-svg', () => {
     FeGaussianBlur: View,
     FeMerge: View,
     FeMergeNode: View,
+    FeMergeNode: View,
   };
 });
 
@@ -99,4 +100,13 @@ jest.mock('lucide-react-native', () => {
       return MockIcon;
     }
   });
+});
+
+jest.mock('expo-image', () => {
+  const { View } = require('react-native');
+  return {
+    Image: (props) => {
+      return View({ ...props, testID: 'expo-image-mock' });
+    },
+  };
 });

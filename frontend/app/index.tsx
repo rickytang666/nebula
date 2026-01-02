@@ -13,7 +13,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { Bot, Camera, Shield } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
-import NebulaLogo from "@/components/NebulaLogo";
+import { Image } from 'expo-image';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -36,7 +36,12 @@ export default function LandingPage() {
           {/* Logo/Icon Area */}
           <Box className="items-center">
             <Box className="mb-6">
-              <NebulaLogo size={150} />
+              <Image
+                source={require('@/public/logo.svg')}
+                style={{ width: 150, height: 150 }}
+                contentFit="contain"
+                transition={100}
+              />
             </Box>
 
             <Heading size="3xl" className="text-white text-center mb-2">
