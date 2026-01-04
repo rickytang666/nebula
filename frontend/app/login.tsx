@@ -68,7 +68,7 @@ export default function LoginPage() {
   return (
     <SafeAreaView className="flex-1 bg-base-100">
       <StatusBar style="light" />
-      
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -79,7 +79,7 @@ export default function LoginPage() {
         >
           {/* Back Button */}
           <View className="px-6 pt-4">
-            <Pressable 
+            <Pressable
               onPress={() => router.back()}
               className="flex-row items-center p-2 -ml-2 rounded-lg active:bg-base-200/50"
             >
@@ -89,7 +89,7 @@ export default function LoginPage() {
           </View>
 
           <View className="flex-1 px-8 justify-center pb-12">
-            
+
             {/* Logo Section */}
             <View className="items-center mb-12">
               <Image
@@ -112,7 +112,7 @@ export default function LoginPage() {
                 <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Email
                 </Text>
-                <Pressable 
+                <Pressable
                   onPress={() => emailRef.current?.focus()}
                   className="bg-base-200 border border-base-300 rounded-xl px-4 h-14 flex-row items-center focus-within:border-primary"
                 >
@@ -125,7 +125,7 @@ export default function LoginPage() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     className="flex-1 text-base-content"
-                    style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', paddingVertical: 0 }}
+                    style={{ fontSize: 16, fontFamily: 'PlusJakartaSans_400Regular', paddingVertical: 0 }}
                   />
                 </Pressable>
               </View>
@@ -134,7 +134,7 @@ export default function LoginPage() {
                 <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Password
                 </Text>
-                <Pressable 
+                <Pressable
                   onPress={() => passwordRef.current?.focus()}
                   className="relative bg-base-200 border border-base-300 rounded-xl px-4 h-14 flex-row items-center focus-within:border-primary pr-12"
                 >
@@ -160,8 +160,8 @@ export default function LoginPage() {
                     )}
                   </Pressable>
                 </Pressable>
-                
-                <Pressable className="self-end mt-2 p-1" onPress={() => {}}>
+
+                <Pressable className="self-end mt-2 p-1" onPress={() => router.push("/forgot-password")}>
                   <Text className="text-primary text-sm font-medium">
                     Forgot Password?
                   </Text>
@@ -191,7 +191,7 @@ export default function LoginPage() {
                 <Text className="text-primary font-bold">Sign Up</Text>
               </Pressable>
             </View>
-            
+
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
