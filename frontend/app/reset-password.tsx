@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import {
     KeyboardAvoidingView,
@@ -13,13 +13,12 @@ import {
     ActivityIndicator
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeft, Eye, EyeOff, Lock } from "lucide-react-native";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react-native";
 import { Image } from 'expo-image';
 import { supabase } from "@/lib/supabase";
 
 export default function ResetPasswordPage() {
     const router = useRouter();
-    const params = useLocalSearchParams();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -47,7 +46,7 @@ export default function ResetPasswordPage() {
             }
         };
         checkSession();
-    }, []);
+    }, [router]);
 
     const handleResetPassword = async () => {
         if (!password || !confirmPassword) {

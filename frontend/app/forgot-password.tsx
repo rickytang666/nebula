@@ -13,7 +13,7 @@ import {
     ActivityIndicator
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeft, Mail, CheckCircle } from "lucide-react-native";
+import { ArrowLeft, CheckCircle } from "lucide-react-native";
 import { Image } from 'expo-image';
 import { supabase } from "@/lib/supabase";
 
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
                             Check Your Email
                         </Text>
                         <Text className="text-base-content/60 text-base mt-3 text-center leading-6">
-                            We've sent a password reset link to{"\n"}
+                            We&apos;ve sent a password reset link to{"\n"}
                             <Text className="text-primary font-semibold">{email}</Text>
                         </Text>
                         <Text className="text-base-content/60 text-sm mt-6 text-center leading-5">
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
                             className="mt-4 p-2"
                         >
                             <Text className="text-primary text-sm font-medium">
-                                Didn't receive the email? Try again
+                                Didn&apos;t receive the email? Try again
                             </Text>
                         </Pressable>
                     </View>
@@ -139,7 +139,7 @@ export default function ForgotPasswordPage() {
                                 Forgot Password?
                             </Text>
                             <Text className="text-base-content/60 text-base mt-2 text-center leading-6">
-                                Enter your email and we'll send you a link to reset your password.
+                                Enter your email and we&apos;ll send you a link to reset your password.
                             </Text>
                         </View>
 
