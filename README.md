@@ -1,67 +1,57 @@
 <div align="center">
-   <img src="./frontend/public/logo.svg" alt="Nebula Logo" width="120" height="120" />
-   <h1>Nebula</h1>
-   <p>A comprehensive mobile application for creating, organizing, and sharing notes.</p>
+  <img src="./frontend/public/logo.svg" alt="Nebula Logo" width="120" height="120" />
+  <h1>Nebula</h1>
+  <p><strong>Mobile notes for the modern mind. AI-powered. Cloud-synced. Fast.</strong></p>
+
 </div>
 
 ---
 
 ## Key Features
 
-- **Rich Text Editing**: Create notes with ease.
-- **OCR Integration**: Capture text and math from images using AI.
-- **Cloud Sync**: Securely store data with our deployed GCP backend.
+- **Rich Text**: Effortless, markdown-based note-taking.
+- **AI OCR**: Extract text & math from images/camera instantly.
+- **Improve Search**: Semantic search for notes, quick note lookup.
+- **AI Chat**: Chat with Gemini about your notes.
+- **Sync**: Real-time cloud storage via **Supabase**.
+- **Secure**: Modern-level Auth & Backend on **GCP Cloud Run**.
 
-## Important: Network & Backend Connection
+## Quick Start
 
-> [!WARNING] **Localhost will not work on physical devices.**
-> If running the frontend on a real device, `localhost` (127.0.0.1) cannot access the backend running on your computer.
->
-> - **Option A (Recommended)**: Set `__DEV__ = true` in the frontend config to use our deployed GCP backend.
-> - **Option B**: Use `ngrok` to tunnel your local backend and update the API URL.
+**Prerequisites:** `Python 3.8+`, `Node.js 20+`, `gcloud` CLI.
 
-## Prerequisites
+### Backend
 
-- Python 3.8+
-- Node.js & npm
-- SQLite (included with Python)
+```bash
+cd backend
+./setup.sh
+./run.sh
+```
 
-## Backend
+(Requires `.env` with Supabase & OpenAI/Mistral keys. See `backend/README.md`)
 
-1. **Setup**:
+### Frontend
 
-   ```bash
-   cd backend
-   ./setup.sh
-   ```
+```bash
+cd frontend
+./setup.sh
+./run.sh
+```
 
-   _Creates venv, installs requirements, drafts .env._
+(Press `i` for iOS Simulator, `a` for Android Emulator)
 
-2. **Run**:
-   ```bash
-   ./run.sh
-   ```
-   _Starts API at http://0.0.0.0:8000._
-
-## Frontend
-
-1. **Setup**:
-
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-2. **Run**:
-   ```bash
-   npx expo start
-   ```
-   _Press `i` for iOS simulator, `a` for Android emulator._
+> [!WARNING]
+> `localhost` won't work on your phone. To test on a real device, point `EXPO_PUBLIC_API_URL` to your deployed backend or use `ngrok` to convert `localhost` to a public URL.
 
 ## Testing
-
-Run the full suite (backend + frontend):
 
 ```bash
 ./run_tests.sh
 ```
+
+## Architecture
+
+- **Frontend**: React Native / Expo
+- **Backend**: FastAPI
+- **Database**: Supabase (PostgreSQL)
+- **Infra**: GCP Cloud Run
