@@ -5,7 +5,7 @@ import {
 } from "react-native-reanimated";
 
 import { View, ActivityIndicator, useColorScheme } from "react-native";
-import { 
+import {
   useFonts,
   PlusJakartaSans_400Regular,
   PlusJakartaSans_500Medium,
@@ -43,7 +43,7 @@ function RootLayoutNav() {
   }
 
   return (
-    <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
+    <GluestackUIProvider>
       <SafeAreaProvider>
         <Stack
           screenOptions={{

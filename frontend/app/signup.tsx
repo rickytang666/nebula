@@ -29,7 +29,7 @@ export default function SignUpPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { session, loading } = useAuth();
-  
+
   const nameRef = React.useRef<TextInput>(null);
   const emailRef = React.useRef<TextInput>(null);
   const passwordRef = React.useRef<TextInput>(null);
@@ -123,7 +123,7 @@ export default function SignUpPage() {
         >
           {/* Back Button */}
           <View className="px-6 pt-4">
-            <Pressable 
+            <Pressable
               onPress={() => router.back()}
               className="flex-row items-center p-2 -ml-2 rounded-lg active:bg-base-200/50"
             >
@@ -133,7 +133,7 @@ export default function SignUpPage() {
           </View>
 
           <View className="flex-1 px-8 pt-6 pb-12">
-            
+
             {/* Header */}
             <View className="mb-8 items-center">
               <Image
@@ -152,12 +152,12 @@ export default function SignUpPage() {
 
             {/* Form */}
             <View className="gap-6">
-              
+
               <View>
                 <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Full Name
                 </Text>
-                <Pressable 
+                <Pressable
                   onPress={() => nameRef.current?.focus()}
                   className="bg-base-200 border border-base-300 rounded-xl px-4 h-14 flex-row items-center focus-within:border-primary"
                 >
@@ -168,7 +168,7 @@ export default function SignUpPage() {
                     value={name}
                     onChangeText={setName}
                     className="flex-1 text-base-content"
-                    style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', paddingVertical: 0 }}
+                    style={{ fontSize: 16, fontFamily: 'PlusJakartaSans_400Regular', paddingVertical: 0 }}
                   />
                 </Pressable>
               </View>
@@ -177,7 +177,7 @@ export default function SignUpPage() {
                 <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Email
                 </Text>
-                <Pressable 
+                <Pressable
                   onPress={() => emailRef.current?.focus()}
                   className="bg-base-200 border border-base-300 rounded-xl px-4 h-14 flex-row items-center focus-within:border-primary"
                 >
@@ -199,7 +199,7 @@ export default function SignUpPage() {
                 <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Password
                 </Text>
-                <Pressable 
+                <Pressable
                   onPress={() => passwordRef.current?.focus()}
                   className="relative bg-base-200 border border-base-300 rounded-xl px-4 h-14 flex-row items-center focus-within:border-primary pr-12"
                 >
@@ -208,6 +208,8 @@ export default function SignUpPage() {
                     placeholder="Create a password"
                     placeholderTextColor="#94a3b8"
                     value={password}
+                    textContentType="newPassword"
+
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
@@ -231,7 +233,7 @@ export default function SignUpPage() {
                 <Text className="text-base-content/70 text-sm font-medium mb-2 ml-1">
                   Confirm Password
                 </Text>
-                <Pressable 
+                <Pressable
                   onPress={() => confirmPasswordRef.current?.focus()}
                   className="relative bg-base-200 border border-base-300 rounded-xl px-4 h-14 flex-row items-center focus-within:border-primary pr-12"
                 >
