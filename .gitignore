@@ -43,7 +43,6 @@ venv/
 .venv/
 ENV/
 bin/
-lib/
 include/
 share/
 pip-log.txt
