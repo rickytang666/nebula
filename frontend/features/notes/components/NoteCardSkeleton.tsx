@@ -29,47 +29,47 @@ export default function NoteCardSkeleton() {
 
   return (
     <View
-      className="bg-gray-900 rounded-3xl p-4 border border-gray-800"
+      className="bg-base-200 rounded-3xl p-4 border border-base-300"
       style={{ minHeight: 160 }}
     >
       {/* Title skeleton */}
       <Animated.View
-        className="bg-gray-800 rounded h-6 mb-2"
+        className="bg-base-300 rounded h-6 mb-2"
         style={{ width: '80%', opacity }}
       />
       <Animated.View
-        className="bg-gray-800 rounded h-6 mb-3"
+        className="bg-base-300 rounded h-6 mb-3"
         style={{ width: '60%', opacity }}
       />
 
       {/* Content skeleton */}
       <Animated.View
-        className="bg-gray-800 rounded h-4 mb-2"
+        className="bg-base-300 rounded h-4 mb-2"
         style={{ width: '100%', opacity }}
       />
       <Animated.View
-        className="bg-gray-800 rounded h-4 mb-2"
+        className="bg-base-300 rounded h-4 mb-2"
         style={{ width: '90%', opacity }}
       />
       <Animated.View
-        className="bg-gray-800 rounded h-4 mb-3"
+        className="bg-base-300 rounded h-4 mb-3"
         style={{ width: '70%', opacity }}
       />
 
       {/* Date skeleton */}
       <Animated.View
-        className="bg-gray-800 rounded h-3 mb-2"
+        className="bg-base-300 rounded h-3 mb-2"
         style={{ width: '40%', opacity }}
       />
 
       {/* Tags skeleton */}
       <View className="flex-row">
         <Animated.View
-          className="bg-gray-800 rounded-full h-7 mr-2"
+          className="bg-base-300 rounded-full h-7 mr-2"
           style={{ width: 60, opacity }}
         />
         <Animated.View
-          className="bg-gray-800 rounded-full h-7"
+          className="bg-base-300 rounded-full h-7"
           style={{ width: 80, opacity }}
         />
       </View>

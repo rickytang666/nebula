@@ -15,11 +15,15 @@ import {
 import { JetBrainsMono_400Regular } from "@expo-google-fonts/jetbrains-mono";
 import { useEffect } from "react";
 import * as Linking from "expo-linking";
+import * as SplashScreen from "expo-splash-screen";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "@/global.css";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
+
+// Prevent splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
 // disable strict mode to suppress warning
 configureReanimatedLogger({
@@ -104,12 +108,15 @@ function RootLayoutNav() {
     };
   }, [router]);
 
+  // Hide splash screen when fonts are loaded and auth is initialized
+  useEffect(() => {
+    if (fontsLoaded && !loading) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, loading]);
+
   if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, backgroundColor: colorScheme === "dark" ? "#000000" : "#FAFAFA", justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#3b82f6" />
-      </View>
-    );
+    return null; // Splash screen will be visible
   }
 
   return (
