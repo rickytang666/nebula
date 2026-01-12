@@ -3,6 +3,14 @@
   <h1>Nebula</h1>
   <p><strong>Mobile notes for the modern mind. AI-powered. Cloud-synced. Fast.</strong></p>
 
+
+![GitHub stars](https://img.shields.io/github/stars/rickytang666/nebula?style=social)
+![GitHub forks](https://img.shields.io/github/forks/rickytang666/nebula?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/rickytang666/nebula)
+![GitHub top language](https://img.shields.io/github/languages/top/rickytang666/nebula)
+![GitHub last commit](https://img.shields.io/github/last-commit/rickytang666/nebula?color=red)
+
+
 </div>
 
 ---
