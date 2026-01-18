@@ -1,14 +1,18 @@
-name: Nebula CI/CD
+name: Backend CI/CD
 
 on:
   push:
     branches: ["main"]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
   pull_request:
     branches: ["**"]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
 
 jobs:
-  # PREVIEW BRANCHES
-
   backend-check:
     runs-on: ubuntu-latest
     steps:
@@ -43,32 +47,6 @@ jobs:
         run: |
           cd backend
           docker build .
-
-  frontend-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install Dependencies
-        working-directory: ./frontend
-        run: npm ci
-
-      - name: Lint
-        working-directory: ./frontend
-        run: npm run lint
-
-      - name: Expo Doctor
-        working-directory: ./frontend
-        run: npx expo-doctor
-
-  # MAIN BRANCH DEPLOYMENT
 
   backend-deploy:
     needs: [backend-check]
